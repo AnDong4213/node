@@ -24,6 +24,10 @@ router.get('/detail', function(req, res) {
     questionModel.queDetail(req, res, loginbean);
 })
 
+router.post('/reply', function(req, res) {
+    questionModel.reply(req, res);
+})
+
 module.exports = router;
 
 

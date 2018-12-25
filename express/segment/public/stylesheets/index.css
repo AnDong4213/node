@@ -41,5 +41,8 @@
     background-color: #ccc;
     border-color: #ccc;
 }
+tr td:first-child{
+    width: 100px;
+}
 
 

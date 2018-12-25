@@ -109,8 +109,10 @@ module.exports = {
         let qid = req.query['qid'];
         if (qid != undefined) {
             let sqlupd = 'update question set looknum=looknum+1 where qid=?';
-            let sqldetail = 'select qid,title,content,uid,nicheng,looknum,renum,finished,updtime,createtime from question where qid=?';
+            let sqldetail = "select qid, title, content, uid, nicheng, looknum, renum, finished, updtime, date_format(createtime,'%Y-%m-%d %r') as createtime from question where qid=?";
             let param=[qid];
+            let sqlReply = "select rpid, content, uid, nicheng, date_format(createtime,'%Y-%c-%d %r') as createtime from replies where qid=?";
+            // %Y-%c-%d
             let pool = connPool();
             pool.getConnection(function(err, conn) {
                 if(err) {
@@ -127,13 +129,19 @@ module.exports = {
                         conn.query(sqldetail, param, function(err, rs) {
                             callback(null, rs);
                         })
+                    },
+                    three: function(callback) {
+                        conn.query(sqlReply, param, function(err, rs) {
+                            callback(null, rs);
+                        })
                     }
                 }, function(err, results) {
                     let rs = results['two'];
-                    console.log(rs)
+                    let rsReply = results['three']
                     res.render('queDetail', {
                         name: '张三',
                         rs,
+                        rsReply,
                         loginbean
                     })
                 })
@@ -141,6 +149,65 @@ module.exports = {
         } else {
             res.send('没传入qid...');
         }
+    },
+    reply: function(req, res) {
+        let loginbean = req.session.loginbean, pool = connPool();
+        let sql1 = 'insert into replies (qid,content,uid,nicheng,createtime) values (?,?,?,?,current_timestamp)';
+        let param1 = [req.body['qid'],req.body['content'],loginbean.id,loginbean.nicheng];
+        let sql2 = 'update question set renum=renum+1 where qid=?';
+        let param2 = [req.body['qid']];
+        pool.getConnection(function(err, conn) {
+            if (err) {
+                res.send("拿不到连接:"+err);
+                return;
+            };
+            conn.beginTransaction(function(err) {
+                if (err) {
+                    res.send('启动事物处理出错');
+                    return;
+                }
+                async.series([
+                    function(callback) {
+                        conn.query(sql1,param1,function(err, rs) {
+                            if (err) {
+                                callback(err, 1);
+                                return;
+                            }
+                            callback(err, rs);
+                        })
+                    },
+                    function(callback) {
+                        conn.query(sql2,param2,function(err, rs) {
+                            if (err) {
+                                callback(err,2);
+                                return;
+                            }
+                            callback(err,rs);
+                        })
+                    }
+                ], function(err, result) {
+                    if (err) {
+                        conn.rollback(function() {
+
+                        })
+                        res.send('数据库错误:'+err);
+                        return;
+                    }
+                    conn.commit(function(err) {
+                        if (err) {
+                            console.log('调用回滚2');
+                            conn.rollback(function() {
+                                //throw err;
+                            });
+                            res.send('数据库错误:'+err);
+                        }
+                        // res.send('回复成功');
+                        res.redirect('./detail?qid=' + req.body['qid']);
+                    })
+                })
+            })
+            conn.release();
+        })
     }
 }
 

@@ -23,21 +23,43 @@
     }
     function submitForm(){$('#frmDemo').submit();}
 </script>
-    <table align='center'>
+    <table align='center' border="1" style="width: 80%;margin-top: 20px;">
         <tr> 
             <td rowspan="2" valign="top"><%=rs[0].nicheng%></td> 
             <td align="center"><%=rs[0].title%></td> 
         </tr> 
         <tr> 
             <td><%-rs[0].content%></td> 
-        </tr> 
+        </tr>
+        <tr>
+            <td colspan="2">
+                <%-rs[0].renum%>个回答
+                <hr style="border:1px solid pink;margin:0px;">
+            </td>
+        </tr>
+        <%
+            if (rsReply != undefined) {
+                rsReply.forEach(function(row){
+        %>
+            <tr>
+                <td>
+                    <%-row['nicheng']%><br/>
+                    <%-row['createtime']%>
+                </td>
+                <td><%-row['content']%></td>
+            </tr>
+        <%
+                })
+            }
+        %>
         <tr>
             <td colspan="2" align="center">
-                <form method="post" action="question/reply">
+                <form method="post" action="/question/reply">
                     <% if (loginbean == undefined) { %>
                         请<a href="javascript:document.getElementById('loginBtn').click()">登录</a>后发表回答
                     <% } else { %>
-                        <textarea id="content" name="content" cols="120" rows="9"></textarea> <br/> 
+                        <textarea id="content" name="content" cols="120" rows="9"></textarea> <br/>
+                        <input type="hidden" name="qid" value="<%=rs[0].qid%>" />
                         <input type="submit" value="回答"/>
                     <% } %>
                 </form>
