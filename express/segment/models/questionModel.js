@@ -40,7 +40,7 @@ module.exports = {
             }
             var param = [req.body['typeid'],req.body['typename'],req.body['title'],req.body['content'],loginbean.id,loginbean.nicheng];
             conn.query(userAddSql, param, function(err,rs) {
-                if(err){
+                if(err) {
                     res.send("数据库错误,错误原因: " + err.message);
                     return;
                 }
@@ -65,7 +65,7 @@ module.exports = {
                     page = 1;
                 }
             }
-            let pageSize = 2;
+            let pageSize = 3;
             let pointStart = (page - 1) * pageSize;
             let count = 0, countPage = 0;
 

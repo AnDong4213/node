@@ -9,6 +9,7 @@
     <!-- 最新的 Bootstrap 核心 JavaScript 文件 --> 
     <script src="/javascripts/bootstrap.min.js"></script> 
     <link rel='stylesheet' href='/stylesheets/index.css' />
+    <link rel="shortcut icon" href=" /favicon.ico" /> 
   </head>
   <body>
     <div style="width:1024px;height:3em;margin:1em auto"> 
@@ -36,11 +37,11 @@
             </td>  
           <% } else { %>  
             <td>  
-              你好<%= loginbean.nicheng %>&nbsp;&nbsp;&nbsp;  
+              你好<span style="color: blue;display: inline-block;margin-left: 10px;"><%= loginbean.nicheng %></span>&nbsp;&nbsp;&nbsp;  
             </td>  
             <td>  
               <div class="btn-group-vertical">  
-                  <button type="button" class="btn btn-default dropdown-toggle"   
+                  <button type="button" class="btn btn-default dropdown-toggle"
                     data-toggle="dropdown">  
                     撰写  
                     <span class="caret"></span>  

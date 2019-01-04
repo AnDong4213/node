@@ -34,9 +34,9 @@
     color:#ffffff; 
     text-align:center; 
 } 
-.menu a, .menu a:hover, .menu a:visited { 
+/* .menu a, .menu a:hover, .menu a:visited { 
     color:#fff; 
-}
+} */
 .btn-success {
     background-color: #ccc;
     border-color: #ccc;
