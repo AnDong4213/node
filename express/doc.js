@@ -1,3 +1,13 @@
+  1.全局安装：npm install -g express    
+注：如果出现版本问题:express不是内部或外部命令    
+执行：npm install -g express-generator    
+测试安装：express -h命令可以列出全部命令    
+    
+2.www/nodejs文件夹下创建项目    
+express -e segment    
+cd segment    
+打开package.json   
+
 1. // 4.x已弃用 req.param()
 /* router.post('/zhuce', (req,res) => {
   let nicheng = req.param('nicheng');
