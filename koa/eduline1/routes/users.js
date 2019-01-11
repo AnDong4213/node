@@ -1,8 +1,6 @@
 var router = require('koa-router')();
+var app = require('koa')();
 router.prefix('/users');
-
-var mongoose = require('mongoose');   
-mongoose.connect('mongodb://localhost/eduline1', {useNewUrlParser: true});
 
 let User = require('../models/UserModel');
 
@@ -13,6 +11,23 @@ router.get('/', function *(next) {
 
 router.get('/login', function *(next) {
   yield this.render('login', {});
+});
+
+router.post('/login', function *(next) {
+  let email = this.request.body['email'];
+  let pwd = this.request.body['pwd'];
+  let rs = yield User.findOne({email,pwd});
+  if (rs != null) {
+    let loginbean = {
+      id: rs._id,
+      nicheng: rs.nicheng
+    };
+    this.session.loginbean = loginbean;
+    // this.body = '登录成功';
+    this.redirect('/')
+  } else {
+    this.body = '邮箱/密码错误'
+  }
 });
 
 /* router.get('/zhuce', function *(next) {
@@ -36,7 +51,9 @@ router.post('/zhuce', function *(next) {
   }) */
 
   try {
-    yield user.save();   //  yield必须加，（坑...）
+    yield user.save();   //  yield必须加, (坑...)
+    this.status = 307;
+    this.redirect('/users/login');
   } catch (err) {
     if (err.toString().indexOf('emailuiq') > -1) {
       this.body = 'Email重复...';

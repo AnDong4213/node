@@ -30,10 +30,21 @@ router.post('/zhuce', async function(ctx, next) {
     pwd: ctx.request.body['pwd'],
     nicheng: ctx.request.body['nicheng']
   })
-  user.save(function(err, rs) {
+  try {
+    await user.save();  // 和 koa1 一样，await不可少...
+  } catch(err) {
+    if (err.toString().indexOf('emailuiq') > -1) {
+      ctx.response.body = 'Email重复...';
+    } else if (err.toString().indexOf('nichenguiq') > -1) {
+      ctx.response.body = '昵称重复...'
+    }
+    return;
+  }
+  /*user.save(function(err, rs) {
 		if (err) console.error(err);
-  });
+  });*/
   ctx.response.body = user._id;
+
 })
 
 module.exports = router
