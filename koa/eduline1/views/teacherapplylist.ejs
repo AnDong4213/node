@@ -1,0 +1,19 @@
+<table class="table" style="margin-bottom: 0px;">
+    <caption style="padding-left: 10px;">讲师申请列表</caption>
+    <tbody>
+        <% rs.forEach(function(item) { %>
+            <tr>
+                <td style="text-align: center;">
+                    <img style="width: 100px;height: 100px;" src="<%- item.photopath %>" />
+                    <li style="list-style: none;margin-top: 10px;">
+                        <span>姓名: <%- item.realname %></span><br />
+                        <span>ID号: <%- item.idnumber %></span>
+                    </li>
+                </td>
+                <td style="width: 500px;overflow: hidden;height: 160px;line-height: 200%;">
+                    <span><%- item.preview %></span>
+                </td>
+            </tr>
+        <%})%>
+    </tbody>
+</table>

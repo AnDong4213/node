@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
+    <link rel="stylesheet" href="/stylesheets/index.css">
+    <script src="/javascripts/jquery.min.js"></script>
+    <script src="/javascripts/bootstrap.min.js"></script>
+</head>
+<body>
+
+    <div style="width:1024px;height:3em;margin:1em auto">
+        <a href="/" class="glyphicon glyphicon-comment" style="float:left;font-size:2em"><b>源库</b></a>
+        &nbsp;
+        <ul class="horul">
+            <li>问答</li>
+            <li>文章</li>
+            <li>笔记</li>
+            <li>活动</li>
+        </ul>
+        &nbsp;
+        <div style="float:right;line-height:2em;">
+            <input type="text"  placeholder="请输入关键词" style="width:240px;height:30px;" >
+            <span class="glyphicon glyphicon-zoom-in" style="font-size:1.5em;" />
+            &nbsp;
+            <%if(!loginbean){%>
+              <input type="button" class="btn btn-success" style="cursor:pointer;" data-toggle="modal" data-target="#loginModal" href="./users/login" value="登录/注册"/>
+            <%}else{%>
+              <a style="color: blue;"><span>首页</span><%=loginbean.nicheng%></a>
+              <% if (loginbean.role > 0) { %>
+                  <a href="/home">个人空间</a>&nbsp;
+              <% } else { %>
+                  <a href="/admin">管理员</a>&nbsp;
+              <% } %>
+              <a href="/users/logout">注销</a>
+            <%}%>
+            &nbsp;
+        </div>
+    </div>
+    <div class="menu">
+        <span>home</span>
+        <span>|</span>
+        <span><a href="#">javascript</a></span>
+        <span>php</span>
+        <span>pathon</span>
+        <span>java</span>
+        <span>mysql</span>
+        <span>ios</span>
+        <span>android</span>
+        <span>node.js</span>
+        <span>html5</span>
+        <span>lunux</span>
+        <span>c++</span>
+        <span>...</span>
+    </div>

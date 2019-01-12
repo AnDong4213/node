@@ -1,6 +1,7 @@
 const router = require('koa-router')()
 
 router.get('/', async (ctx, next) => {
+  ctx.state.loginbean = ctx.session.loginbean;
   await ctx.render('index', {
     title: 'Hello Koa 2!'
   })

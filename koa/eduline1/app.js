@@ -9,6 +9,8 @@ var MongooseStore = require('koa-session-mongoose');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
+var home = require('./routes/home');
+var admin = require('./routes/admin');
 
 // error handler
 onerror(app);
@@ -43,8 +45,8 @@ app.use(session({
 
 /*app.use(function* (next) {
   var url = this.originalUrl;
-  if (url !== 'users/login' && !this.session.loginbean) {
-    return this.redirect('/users/login')
+  if (url !== '/users/login' && !this.session.loginbean) {    // 是 '/users/login' 而非 'users/login',不能少'/'
+    return this.redirect('/users/login');
   };
   yield next;
 })*/
@@ -52,6 +54,8 @@ app.use(session({
 // routes definition
 app.use(index.routes(), index.allowedMethods());
 app.use(users.routes(), users.allowedMethods());
+app.use(home.routes(), home.allowedMethods());
+app.use(admin.routes(), admin.allowedMethods());
 
 // error-handling
 app.on('error', (err, ctx) => {

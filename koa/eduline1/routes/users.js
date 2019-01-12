@@ -1,9 +1,7 @@
 var router = require('koa-router')();
-var app = require('koa')();
 router.prefix('/users');
 
 let User = require('../models/UserModel');
-
 
 router.get('/', function *(next) {
   this.body = 'this is a users response!';
@@ -20,7 +18,8 @@ router.post('/login', function *(next) {
   if (rs != null) {
     let loginbean = {
       id: rs._id,
-      nicheng: rs.nicheng
+      nicheng: rs.nicheng,
+      role: rs.role
     };
     this.session.loginbean = loginbean;
     // this.body = '登录成功';
@@ -43,7 +42,8 @@ router.post('/zhuce', function *(next) {
   let user = new User({
     email: this.request.body['email'],
     pwd: this.request.body['pwd'],
-    nicheng: this.request.body['nicheng']
+    nicheng: this.request.body['nicheng'],
+    role: 1
   })
 
   /* user.save((err, rs) => {
@@ -63,7 +63,11 @@ router.post('/zhuce', function *(next) {
     return;
   }
   this.body = user._id;
-
 });
+
+router.get('/logout', function* () {
+  delete this.session.loginbean;
+  this.redirect('/');
+})
 
 module.exports = router;
