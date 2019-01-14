@@ -1,25 +1,21 @@
-var router = require('koa-router')();
-var formidable = require('formidable');
+const router = require('koa-router')();
+const formidable = require('formidable');
 router.prefix('/home');
 
 let User = require('../models/UserModel');
-let Msg = require('../models/MsgModel');
 
-router.get('/', function *(next) {
-    let loginbean = this.session.loginbean;
-    // let beRejected = yield User.findOne({_id: loginbean.id});
-    this.state.loginbean = loginbean;
+router.get('/', async (ctx, next) => {
+    let loginbean = ctx.session.loginbean;
+    ctx.state.loginbean = loginbean;
     if (loginbean.role == 0) {
-        this.body = "<script>alert('您无权访问此页面');location.href='/'</script>";
+        ctx.body = "<script>alert('您无权访问此页面');location.href='/'</script>";
         return;
-    };
-    let msgRs = yield Msg.find({to: loginbean.id});
-    console.log(rs);
-  yield this.render('home', {msgrs: msgRs})
+    }
+  await ctx.render('home', {})
 });
 
-router.get('/apply', function *(next) {
-  yield this.render('apply', {})
+router.get('/apply', async (ctx, next) => {
+  await ctx.render('apply', {})
 });
 
 function upload(req, form) {
@@ -54,20 +50,20 @@ function insertTeacher(loginbean, fields, files) {
     })
 }
 
-router.post('/apply', function* (next) {
-    var loginbean = this.session.loginbean;
+router.post('/apply', async (ctx, next) => {
+    var loginbean = ctx.session.loginbean;
     if (!loginbean) {
-        this.body = '<script>alert("登录过期，请重新登录...");location.href="/"</script>'
+        ctx.body = '<script>alert("登录过期，请重新登录...");location.href="/"</script>'
     };
     var form = new formidable.IncomingForm();
     form.encoding = 'utf-8';
     form.uploadDir = "./public/images";
     form.keepExtensions = true;
     form.maxFieldsSize = 5 * 1024 * 1024;
-    var rs = yield upload(this.req, form);  // 不会产生异步...
-    var res = yield insertTeacher(loginbean, rs.fields, rs.files);
-    this.session.loginbean.role = 2;
-    this.body = res;
+    var rs = await upload(ctx.req, form);  // 不会产生异步...
+    var res = await insertTeacher(loginbean, rs.fields, rs.files);
+    ctx.session.loginbean.role = 2;
+    ctx.body = res;
 })
 
 module.exports = router;

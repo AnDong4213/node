@@ -7,22 +7,19 @@ router.get('/', function (ctx, next) {
   ctx.body = 'ctx is a users response!'
 })
 
-router.get('/bar', function (ctx, next) {
-  ctx.body = 'ctx is a users/bar response';
-})
-
 router.get('/login', async (ctx, next) => {
   await ctx.render('login', {})
 })
 
-router.post('/login', async function(ctx, nexy) {
+router.post('/login', async function(ctx, next) {
   let email = ctx.request.body['email'];
   let pwd = ctx.request.body['pwd'];
   let rs = await User.findOne({email,pwd});
   if (rs !== null) {
     let loginbean = {
       id: rs._id,
-      nicheng: rs.nicheng
+      nicheng: rs.nicheng,
+      role: rs.role
     };
     ctx.session.loginbean = loginbean;
     ctx.redirect('/');
@@ -30,6 +27,10 @@ router.post('/login', async function(ctx, nexy) {
     ctx.body = '邮箱/密码错误'
   }
 })
+
+router.get('/zhuce', async (ctx, next) => {
+  await ctx.render('login', {})
+});
 
 router.post('/zhuce', async function(ctx, next) {
   /*let subflag = ctx.query['subflag'];
@@ -40,9 +41,9 @@ router.post('/zhuce', async function(ctx, next) {
   let user = new User({
     email: ctx.request.body['email'],
     pwd: ctx.request.body['pwd'],
-    nicheng: ctx.request.body['nicheng']
+    nicheng: ctx.request.body['nicheng'],
+    role: 1
   })
-  console.log(ctx.request.body['email'])
   try {
     await user.save();  // 和 koa1 一样，await不可少...
     ctx.status = 307;
@@ -55,9 +56,6 @@ router.post('/zhuce', async function(ctx, next) {
     }
     return;
   }
-  /*user.save(function(err, rs) {
-		if (err) console.error(err);
-  });*/
   ctx.response.body = user._id;
 })
 

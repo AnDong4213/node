@@ -19,7 +19,8 @@ router.post('/login', function *(next) {
     let loginbean = {
       id: rs._id,
       nicheng: rs.nicheng,
-      role: rs.role
+      role: rs.role,
+      msgnum: rs.msgnum
     };
     this.session.loginbean = loginbean;
     // this.body = '登录成功';
@@ -34,6 +35,9 @@ router.post('/login', function *(next) {
   let email = this.query['email'];
   this.body = '收到Email:' + email;
 }); */
+router.get('/zhuce', function *(next) {
+  yield this.render('login', {});
+});
 router.post('/zhuce', function *(next) {
   /* let subflag = this.query['subflag'];
   let email = this.request.body['email'];
@@ -43,7 +47,8 @@ router.post('/zhuce', function *(next) {
     email: this.request.body['email'],
     pwd: this.request.body['pwd'],
     nicheng: this.request.body['nicheng'],
-    role: 1
+    role: 1,
+    msgnum: 0
   })
 
   /* user.save((err, rs) => {

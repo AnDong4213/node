@@ -25,7 +25,7 @@ app.use(require('koa-bodyparser')());
 app.use(json());
 app.use(logger());
 
-app.use(function *(next){
+app.use(function *(next) {
   var start = new Date;
   yield next;
   var ms = new Date - start;
@@ -43,13 +43,19 @@ app.use(session({
   })
 }));
 
-/*app.use(function* (next) {
+var allowpage = ['/', '/users/login', '/users/zhuce', '/users/logout'];
+app.use(function* (next) {
   var url = this.originalUrl;
-  if (url !== '/users/login' && !this.session.loginbean) {    // 是 '/users/login' 而非 'users/login',不能少'/'
-    return this.redirect('/users/login');
-  };
-  yield next;
-})*/
+  if (allowpage.indexOf(url) > -1) {
+      yield next;
+  } else {
+      if (this.session.loginbean) {
+          yield next;
+      } else {
+          this.redirect('/')
+      }
+  }
+})
 
 // routes definition
 app.use(index.routes(), index.allowedMethods());

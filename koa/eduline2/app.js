@@ -13,6 +13,8 @@ const MongooseStore = require('koa-session-mongoose');
 
 const index = require('./routes/index')
 const users = require('./routes/users')
+const home = require('./routes/home')
+const admin = require('./routes/admin')
 
 // error handler
 onerror(app)
@@ -48,18 +50,26 @@ app.use(session({
   })
 }, app));
 
-/* app.use(async (ctx, next) => {
-  var url = ctx.originalUrl;
-  if (url !== '/users/login' && !ctx.session.loginbean) {    // 是 '/users/login' 而非 'users/login',不能少'/'
-    return ctx.redirect('/users/login');
-    // return ctx.response.redirect('/users/login');
-  };
-  await next();  // next加上()
-}) */
+const allowpage = ['/', '/users/login', '/users/zhuce', '/users/logout'];
+app.use(async (ctx, next) => {
+  let url = ctx.originalUrl;
+  if (allowpage.indexOf(url) > -1) {
+    await next();
+  } else {
+    if (ctx.session.loginbean) {
+      await next();   // next加上()
+    } else {
+      ctx.redirect('/users/login');
+      // ctx.response.redirect('/users/login');
+    }
+  }
+})
 
 // routes
 app.use(index.routes(), index.allowedMethods())
 app.use(users.routes(), users.allowedMethods())
+app.use(home.routes(), home.allowedMethods())
+app.use(admin.routes(), admin.allowedMethods())
 
 // error-handling
 app.on('error', (err, ctx) => {

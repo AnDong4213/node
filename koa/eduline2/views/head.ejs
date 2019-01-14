@@ -31,7 +31,6 @@
             <%}else{%>
               <a style="color: #ccc;"><span>首页</span><%=loginbean.nicheng%></a>
               <% if (loginbean.role > 0) { %>
-                  <a href='/home' style='color:#000'>消息<span class="badge"><%- loginbean.msgnum %></span></a>
                   <a href="/home">个人空间</a>&nbsp;
               <% } else { %>
                   <a href="/admin">管理员</a>&nbsp;

@@ -9,8 +9,8 @@ var User = mongoose.model('user', new mongoose.Schema({
     idnumber: String,
     photoname: String,
     photopath: String,
-    preview: String
-    // msgnum: Number
+    preview: String,
+    msgnum: Number
 }))
 
 module.exports = User;
