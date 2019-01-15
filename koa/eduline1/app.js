@@ -11,6 +11,8 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 var home = require('./routes/home');
 var admin = require('./routes/admin');
+var msg = require('./routes/msg');
+var teacher = require('./routes/teacher');
 
 // error handler
 onerror(app);
@@ -62,6 +64,8 @@ app.use(index.routes(), index.allowedMethods());
 app.use(users.routes(), users.allowedMethods());
 app.use(home.routes(), home.allowedMethods());
 app.use(admin.routes(), admin.allowedMethods());
+app.use(msg.routes(), msg.allowedMethods());
+app.use(teacher.routes(), teacher.allowedMethods());
 
 // error-handling
 app.on('error', (err, ctx) => {

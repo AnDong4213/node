@@ -32,6 +32,9 @@
     color:#ffffff;
     text-align:center;
 }
+.answer > tr > td:last-child {
+    padding-top: 22px;
+}
 .menu a,.menu a:hover, .menu a:visited{
     color:#fff;
     text-decoration: none;
@@ -45,4 +48,15 @@ a,a:hover,a:visited{
     color: #fff;
     background-color: #ccc;
     border-color: #ccc;
+}
+.table {
+    margin-bottom: 0px;
+}
+.btn {
+    border-radius: 0;
+    padding: 3px 6px;
+    font-size: 12px;
+}
+th {
+    text-align: center;
 }

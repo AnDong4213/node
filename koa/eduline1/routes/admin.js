@@ -11,7 +11,12 @@ router.get('/', function *(next) {
       this.body = "<script>alert('您无权访问此页面qq');location.href='/'</script>";
       return;
   }
-  yield this.render('adminhome', {})
+  yield User.update({_id: loginbean.id}, {$set: {msgnum: 0}});
+  loginbean.msgnum = 0;
+  this.session.loginbean = loginbean;
+  this.state.loginbean = loginbean;
+  let rsAdmin = yield Msg.find({to: loginbean.id});
+  yield this.render('adminhome', {rsadmin: rsAdmin});
 });
 
 router.get('/teacherapplylist', function *(next) {

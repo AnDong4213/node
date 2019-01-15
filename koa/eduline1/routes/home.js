@@ -13,9 +13,12 @@ router.get('/', function *(next) {
         this.body = "<script>alert('您无权访问此页面');location.href='/'</script>";
         return;
     };
+    yield User.update({_id: loginbean.id}, {$set: {msgnum: 0}});
+    loginbean.msgnum = 0;
+    this.session.loginbean = loginbean;
+    this.state.loginbean = loginbean;
     let msgRs = yield Msg.find({to: loginbean.id});
-    console.log(rs);
-  yield this.render('home', {msgrs: msgRs})
+    yield this.render('home', {msgrs: msgRs})
 });
 
 router.get('/apply', function *(next) {

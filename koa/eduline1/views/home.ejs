@@ -1,12 +1,62 @@
 <%- include head %>
 <script type="text/javascript">
+
   function httpSend(url) {
-    $('#main').load(url);
+      $('#main').load(url);
   }
+
+  function newMsg() {
+      $('#replyDiv').hide();
+      $('#nmsgDiv').show();
+      $('#msgModal').modal('show');
+  }
+  function onNewMsg(){
+    $.post('/msg/newmsg',$('#msgForm').serialize(), function(retxt){
+        if (retxt == 1) {
+           alert('发送成功');
+           $('#msgModal').modal('hide');
+        } else if (retxt == -1) {
+          alert('昵称输入错误,查无此人');
+        } else if (retxt == 0) {
+          alert('数据库错误');
+      } else {
+          alert('请输入不能为空..');
+      }
+    });
+    return false;
+  }
+
+  function del(id) {
+      if (confirm('确定删除吗?')) {
+          location.href = '/msg/delmsg?id='+id;
+      }
+  }
+
+  function reply(rid, sendname) {
+      replyForm.rid.value = rid;
+      $('#replyDiv').show();
+      $('#nmsgDiv').hide();
+      $('#sendname').html(sendname);
+      $('#msgModal').modal('show');
+  }
+  function onReply() {
+      $.post('/msg/reply', $('#replyForm').serialize(), function(retxt) {
+          if (retxt == 1) {
+              alert('成功...');
+              $('#msgModal').modal('hide');
+          } else if (retxt == 0) {
+              alert('失败...')
+          } else {
+              alert('管理员no或无文本...')
+          }
+      })
+      return false;
+  }
+
 </script>
     <div style="width:1024px;margin:1em auto;">
       <div style="border:1px solid green;width:210px;float:left">
-        <div style='text-align:center'>你好, <span style="color: blue"><%-loginbean.nicheng%></span></div>
+        <div style='text-align:center'>你好, <span style="color: lightblue"><%-loginbean.nicheng%></span></div>
           <table class="table">
              <tbody class="answer">
                 <tr>
@@ -29,9 +79,11 @@
                    <td><div><br/></div></td>
                    <td>
                        <% if (loginbean.role == 1) { %>
-                        <a href="#" onclick='httpSend("/home/apply")'>申请为讲师</a>
+                           <a href="#" onclick='httpSend("/home/apply")'>申请为讲师</a>
                        <% } else if (loginbean.role == 2) { %>
-                        <a href="#" style="color: lightblue">讲师申请审核中</a>
+                           <a href="#" style="color: lightblue">讲师申请审核中</a>
+                       <% } else if (loginbean.role == 3) { %>
+                           <a href="/teacher/course" style="color: lightblue">课程管理</a>
                        <% } %>
                    </td>
                 </tr>
@@ -40,30 +92,71 @@
       </div>
       <div id="main" style="border:1px solid green;width:810px;float:right">
           <table class="table">
-             <caption>消息列表</caption>
+             <caption style="text-align: center;">
+                 消息列表
+                 <input type="button" onclick="newMsg()" class="btn btn-success" value="新消息" style="position: relative;left: 270px;" />
+             </caption>
                <tbody>
-                  <tr>
-                     <td>1</td>
-                     <td>Bangalore</td>
-                  </tr>
-                  <tr>
-                     <td>2</td>
-                     <td>Mumbai</td>
-                  </tr>
-                  <tr>
-                     <td>3</td>
-                     <td>Bangalore</td>
-                  </tr>
+                   <tr>
+                       <th>发送人</th>
+                       <th>内容</th>
+                       <th>时间</th>
+                       <th>操作</th>
+                   </tr>
+                   <% msgrs.forEach(function (item) { %>
+                       <% date = item.sendtime %>
+                       <tr style="text-align: center;">
+                           <td><%- item.sendname %></td>
+                           <td><%- item.message %></td>
+                           <td>
+                               <%- date.getFullYear() %>-<%- date.getMonth()+1 %>-<%- date.getDate() %>
+                               <%- date.getHours() %>:<%- date.getMinutes() %>:<%- date.getSeconds() %>
+                           </td>
+                           <td>
+                               <input
+                                    type="button"
+                                    class="btn btn-success"
+                                    value="回复"
+                                    onclick='reply("<%- item.send %>","<%- item.sendname %>")'
+                               /> &nbsp;
+                               <input type="button" class="btn btn-success" value="删除" onclick='del("<%- item._id %>")' />
+                          </td>
+                       </tr>
+                   <% }) %>
                </tbody>
           </table>
      </div>
   </div>
-  <div class="modal fade" id="loginModal" >
-      <div class="modal-dialog">
-          <div class="modal-content" style='width:840px'>
 
-          </div>
-      </div>
-  </div>
-  </body>
-</html>
+  <div class="modal fade" id="msgModal" >
+        <div class="modal-dialog">
+
+            <div id='replyDiv' class="modal-content" style='width:840px'>
+                <div class="modal-header" style='text-align: center'>
+                  回复:<span id='sendname'></span>
+                </div>
+                <div class="modal-body" style='text-align: center'>
+                  <form name='replyForm' id='replyForm' onsubmit="return onReply();">
+                      <textarea name='message' cols='67' rows='12'></textarea><br/>
+                      <input type='hidden' name='rid'>
+                      <input type='submit' value='提交'>
+                  </form>
+                </div>
+                <div class="modal-footer">&nbsp;</div>
+            </div>
+
+            <div id='nmsgDiv' class="modal-content" style='width:840px'>
+              <form name='msgForm' id='msgForm' onsubmit="return onNewMsg();">
+                <div class="modal-header" style='text-align: center'>
+                  发送给: &nbsp;<input type='text' name='nicheng' placeholder='请填写昵称'>
+                </div>
+                <div class="modal-body" style='text-align: center'>
+                  <textarea name='message' cols='67' rows='12'></textarea><br/>
+                  <input type='submit' value='提交'>
+               </div>
+              </form>
+              <div class="modal-footer">&nbsp;</div>
+            </div>
+
+        </div>
+    </div>
