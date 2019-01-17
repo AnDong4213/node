@@ -13,6 +13,7 @@ var home = require('./routes/home');
 var admin = require('./routes/admin');
 var msg = require('./routes/msg');
 var teacher = require('./routes/teacher');
+var upload = require('./routes/upload');
 
 // error handler
 onerror(app);
@@ -66,6 +67,7 @@ app.use(home.routes(), home.allowedMethods());
 app.use(admin.routes(), admin.allowedMethods());
 app.use(msg.routes(), msg.allowedMethods());
 app.use(teacher.routes(), teacher.allowedMethods());
+app.use(upload.routes(), upload.allowedMethods());
 
 // error-handling
 app.on('error', (err, ctx) => {

@@ -1,0 +1,81 @@
+<%- include head %>
+<script type="text/javascript" src="/xheditor-1.2.2.min.js"></script>
+<script type="text/javascript" src="/xheditor_lang/zh-cn.js"></script>
+
+<script type="text/javascript">
+    var editor;
+    $(pageInit);
+    function pageInit() {
+          $.extend(XHEDITOR.settings,{shortcuts:{'ctrl+enter': chapterForm}});
+          editor = $(chapterForm.content).xheditor({
+              html5Upload: false,
+              upMultiple:'1',
+              upLinkUrl:"../upload/upfile", upLinkExt:"zip,rar,txt",
+              upImgUrl:"../upload/upimg", upImgExt:"jpg,jpeg,gif,png",
+              upFlashUrl:"/uploadFlash", upFlashExt:"swf",
+              upMediaUrl:"/uploadMedia", upMediaExt:"wmv,avi,wma,mp3,mid"
+          });
+          chapterForm.myurl.value = location.href;
+     }
+
+    function newChapter() {
+        $('#chapterForm').show();
+    }
+    function fold() {
+       $('#chapterForm').hide();
+    }
+</script>
+
+<div style="width:1024px;margin:1em auto;">
+     <form id='chapterForm' name='chapterForm' action='/teacher/newChapter' method='post' style="display: none;">
+        <table class="table">
+          <tr><td align='center' colspan='2'>&nbsp;创建新章节</td></tr>
+          <tr>
+              <td align='right'>章节标题:</td>
+              <td><input type='text' name='title' /></td>
+          </tr>
+          <tr>
+              <td align='right'>章节内容:</td>
+              <td><textarea name='content' cols='120' rows='9'></textarea></td>
+          </tr>
+          <tr>
+              <td align='center' colspan='2'>
+                <input type='hidden' name='courseid' value='<%- id %>' />
+                <!-- <input type='hidden' name='chapterid' /> -->
+                <input type='hidden' name='myurl' />
+                <input type='submit' name='subBtn' value='创建章节' /> &nbsp;
+                <input type='button' value='收起' onclick='fold()' />
+              </td>
+          </tr>
+        </table>
+     </form>
+    <div id='main' style="border:1px solid green;width:100%;">
+        <table class="table">
+            <caption style='text-align: center'>
+                <%- courseName %>
+                <input type="button" class="btn btn-success" style='position:relative;left:240px' value="新章节" onclick='newChapter()'/>
+           </caption>
+           <tbody>
+               <tr align='center'>
+                  <td>章节标题</td>
+                  <td>操作</td>
+              </tr>
+              <% chapterRs.forEach(function(item) { %>
+                  <tr>
+                      <td>
+                          <a href="./chapterInfo?id=<%- item._id %>" target="_blank"><%- item.title %></a>
+                      </td>
+                      <td align='center'>
+                        <input type="button" class="btn btn-success"  value='修改' onclick='updChapter("<%- item._id %>")' />&nbsp;
+                        <input type="button" class="btn btn-success"  value='删除' onclick='delChapter("<%- item._id %>")' />
+                      </td>
+                  </tr>
+              <% }) %>
+           </tbody>
+        </table>
+    </div>
+
+</div>
+
+</body>
+</html>

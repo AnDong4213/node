@@ -33,7 +33,7 @@
                        <% } else if (loginbean.role == 2) { %>
                            <a href="#" style="color: lightblue">讲师申请审核中</a>
                        <% } else if (loginbean.role == 3) { %>
-                           <a href="/teacher/course" style="color: lightblue">课程管理</a>
+                           <a href="#" style="color: lightblue">课程管理</a>
                        <% } %>
                    </td>
                 </tr>
@@ -48,7 +48,31 @@
                 </a>
                </caption>
                <tbody>
-
+                   <% courseRs.forEach(function(item) { %>
+                       <tr>
+                           <td><img style="width: 20px;height: 20px;" src='../<%- item.logo %>'/></td>
+                           <td><%- item.title %></td>
+                           <td>
+                               <% if (item.status == 0) { %>
+                                   编辑中
+                               <% } else if (item.status == 1) { %>
+                                   审核中
+                               <% } else if (item.status == 2) { %>
+                                   审核通过
+                               <% } %>
+                           </td>
+                           <td>
+                              <% if (item.status == 0) { %>
+                                  <a href="/teacher/chapter?cid=<%- item._id %>&courseName=<%- item.title %>">
+                                      <input type="button" class="btn btn-success" value="编辑章节" />
+                                  </a>&nbsp;
+                                  <input type="button" class="btn btn-success" value="提交审核" onclick="reqReview('<%- item._id %>')" />
+                              <% } else if (item.status==1) { %>
+                                  课程审核中...
+                              <% } %>
+                          </td>
+                       </tr>
+                   <% }) %>
                </tbody>
           </table>
      </div>

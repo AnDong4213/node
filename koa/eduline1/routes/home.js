@@ -45,7 +45,7 @@ function insertTeacher(loginbean, fields, files) {
 		teacher.idnumber = fields.idnumber;
         teacher.preview = fields.preview;
 		teacher.photoname = files.photo.name;
-        teacher.photopath=(files.photo.path).replace('public\\','');
+        teacher.photopath= (files.photo.path).replace('public\\','');
         // User.update({_id: loginbean.id}, {$set: {teacher}}, function(err, rs) {  // 插入不到数据库，但也不报错...
         User.update({_id: loginbean.id}, {$set: teacher}, function(err, rs) {
             if (err) {
