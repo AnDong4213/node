@@ -19,12 +19,39 @@
      }
 
     function newChapter() {
+        chapterForm.reset();
+        chapterForm.subBtn.value='创建新章节';
+        chapterForm.myurl.value = location.href;
+        chapterForm.action='/teacher/newChapter';
         $('#chapterForm').show();
     }
     function fold() {
        $('#chapterForm').hide();
     }
+
+    function delChapter(id) {
+        if (confirm('确定删除吗?')) {
+            location.href="./delChapter?id=" + id + "&cid=<%- id %>&courseName=<%- courseName %>";
+        }
+    }
+    function updChapter(id) {
+        $.get('./getChapter?id='+id,function(data){
+          chapterForm.title.value=data.title;
+          //chapterForm.content.value=data.content;
+          editor.setSource(data.content);
+          chapterForm.chapterid.value=data._id;
+          chapterForm.action='/teacher/updChapter';
+          $('#chapterForm').show();
+          chapterForm.subBtn.value='修改章节';
+       })
+    }
 </script>
+<style media="screen">
+    .hilogoimg img {
+        width: 22px;
+        height: 22px;
+    }
+</style>
 
 <div style="width:1024px;margin:1em auto;">
      <form id='chapterForm' name='chapterForm' action='/teacher/newChapter' method='post' style="display: none;">
@@ -41,7 +68,7 @@
           <tr>
               <td align='center' colspan='2'>
                 <input type='hidden' name='courseid' value='<%- id %>' />
-                <!-- <input type='hidden' name='chapterid' /> -->
+                <input type='hidden' name='chapterid' />
                 <input type='hidden' name='myurl' />
                 <input type='submit' name='subBtn' value='创建章节' /> &nbsp;
                 <input type='button' value='收起' onclick='fold()' />
@@ -58,12 +85,16 @@
            <tbody>
                <tr align='center'>
                   <td>章节标题</td>
+                  <td align='left'>章节LOGO</td>
                   <td>操作</td>
               </tr>
               <% chapterRs.forEach(function(item) { %>
                   <tr>
-                      <td>
+                      <td align='center'>
                           <a href="./chapterInfo?id=<%- item._id %>" target="_blank"><%- item.title %></a>
+                      </td>
+                      <td align='left' class="hilogoimg">
+                          <%- item.logoimg %>
                       </td>
                       <td align='center'>
                         <input type="button" class="btn btn-success"  value='修改' onclick='updChapter("<%- item._id %>")' />&nbsp;
@@ -71,6 +102,27 @@
                       </td>
                   </tr>
               <% }) %>
+              <tr>
+                  <% if (totalPage == 0) { %>
+                      <td align='center'>
+                          还未添加章节
+                      </td>
+                  <% } else { %>
+                      <td colspan='2' align='center'>
+                          共 <%- totalPage %> 条记录&nbsp;
+                          第 <span style="color: lightblue"><%- page %> </span> 页 &nbsp;
+                          <a href='<%= url %>&page=1'>首页</a>&nbsp;
+                          <a href='<%= url %>&page=<%- (page-1) == 0 ? 1 : (page-1) %>'>上一页</a>&nbsp;
+                          <a href='<%= url %>&page=<%- (page+1) > totalPage ? totalPage : (page+1) %>'>下一页</a>&nbsp;
+                          <a href='<%=url%>&page=<%- totalPage %>'>尾页</a>
+                          &nbsp;
+                          <% for(let i=1;i<=totalPage;i++) { %>
+                            <a href='<%= url %>&page=<%- i %>'> <%- i %> </a>
+                            &nbsp;
+                          <% } %>
+                      </td>
+                  <% } %>
+              </tr>
            </tbody>
         </table>
     </div>
