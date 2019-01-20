@@ -24,6 +24,9 @@ export default {
     showDiaLog(vnode) {
       this.currentView = vnode
       this.dialogVisible = true
+    },
+    hideDiaLog() {
+      this.dialogVisible = false
     }
   }
 }

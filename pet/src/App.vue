@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <headBar />
+    <headBar ref="headBar" />
     <router-view />
     <diaLog ref="diaLog"></diaLog>
   </div>

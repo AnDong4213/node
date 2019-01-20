@@ -52,10 +52,18 @@ router.post('/login', async function (ctx, next) {
       role: rs.role
     };
     ctx.session.loginbean = loginbean;
-    ctx.body = '登录成功...';
+    // ctx.body = '登录成功...';
+    ctx.body = 1;
   } else {
-    ctx.body='账号/密码错误';
+    // ctx.body='账号/密码错误';
+    ctx.body = 0;
   }
+})
+
+router.get('/mypet', async (ctx, next) => {
+  let loginbean = ctx.session.loginbean;
+  console.log(loginbean);
+  ctx.body = 'yy'
 })
 
 module.exports = router

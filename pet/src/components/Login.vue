@@ -90,7 +90,7 @@ export default {
         pwd: this.zcpwd,
         nicheng: this.zcnicheng
       };
-      axios.post('http://localhost:3000/users/zhuce', formObj)
+      axios.post('/api/users/zhuce', formObj)
       .then(res => {
         let data = res.data;
         if (data == 1) {
@@ -123,9 +123,17 @@ export default {
         this.loginemail = email;
         this.loginpwd = pwd;
       }
-      axios.post('http://localhost:3000/users/login', formObj)
+      axios.post('/api/users/login', formObj)
       .then(res => {
-        console.log(res.data)
+        if (res.data == 1) {
+          this.$parent.$parent.hideDiaLog();
+          this.$parent.$parent.$parent.$refs.headBar.flag = 1;
+          this.loginemail = '';
+          this.loginpwd = '';
+          this.$router.push('/private/home');
+        } else {
+          alert('账号/密码错误')
+        }
       })
       .catch(err => {
         console.log(err)
