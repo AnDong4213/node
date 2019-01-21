@@ -53,7 +53,7 @@ router.post('/login', async function (ctx, next) {
     };
     ctx.session.loginbean = loginbean;
     // ctx.body = '登录成功...';
-    ctx.body = 1;
+    ctx.body = loginbean;
   } else {
     // ctx.body='账号/密码错误';
     ctx.body = 0;
@@ -63,7 +63,7 @@ router.post('/login', async function (ctx, next) {
 router.get('/mypet', async (ctx, next) => {
   let loginbean = ctx.session.loginbean;
   console.log(loginbean);
-  ctx.body = 'yy'
+  ctx.body = 'xxyy'
 })
 
 module.exports = router

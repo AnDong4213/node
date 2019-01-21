@@ -1,7 +1,7 @@
 <template>
   <el-row>
     <el-col :span="2">&nbsp;</el-col>
-    <el-col :span="4" style='background: #f9fafc;font-size:2em'>
+    <el-col :span="4" style='background: #f9fafc;font-size:2em;color: #eee'>
       <i class="el-icon-menu"></i>宠物空间
     </el-col>
     <el-col :span="10" style='background: #f9fafc'>
@@ -28,13 +28,16 @@
 
 <script>
 import Login from './Login'
+import { mapGetters } from 'vuex'
 export default {
-  name: 'HelloWorld',
   props: {
     data: {
       type: String,
       default: 'uu'
     }
+  },
+  computed: {
+    ...mapGetters(['logInfoBean'])
   },
   data () {
     return {

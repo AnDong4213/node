@@ -35,4 +35,14 @@ export default {
   color: #2c3e50;
   margin-top: 0px;
 }
+.el-button--success {
+  color: #fff;
+  background-color: #ddd;
+  border-color: #ccc;
+}
+.el-button--primary {
+  color: #fff;
+  background-color: #ddd;
+  border-color: #ccc;
+}
 </style>

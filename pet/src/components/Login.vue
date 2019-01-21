@@ -69,7 +69,8 @@
 </template>
 
 <script>
-import axios from 'axios'
+import { httpPost } from '@/common/httpBean'
+import { mapMutations } from 'vuex'
 export default {
   data () {
     // console.log(99)  // 呵呵了，只渲染一次，不是动态的...
@@ -90,9 +91,7 @@ export default {
         pwd: this.zcpwd,
         nicheng: this.zcnicheng
       };
-      axios.post('/api/users/zhuce', formObj)
-      .then(res => {
-        let data = res.data;
+      httpPost('/user/zhuce', formObj, (data) => {
         if (data == 1) {
           this.login(this.zcemail, this.zcpwd);
           alert('注册成功');
@@ -103,9 +102,6 @@ export default {
         } else {
           alert('数据库错误,请稍后再试...')
         }
-      })
-      .catch(err => {
-        console.log(err)
       })
     },
     login(email, pwd) {
@@ -120,12 +116,10 @@ export default {
           email,
           pwd
         };
-        this.loginemail = email;
-        this.loginpwd = pwd;
       }
-      axios.post('/api/users/login', formObj)
-      .then(res => {
-        if (res.data == 1) {
+      httpPost('/user/login', formObj, (data) => {
+        if (data !== 0) {
+          this.onLogin(data)
           this.$parent.$parent.hideDiaLog();
           this.$parent.$parent.$parent.$refs.headBar.flag = 1;
           this.loginemail = '';
@@ -135,10 +129,9 @@ export default {
           alert('账号/密码错误')
         }
       })
-      .catch(err => {
-        console.log(err)
-      })
-    }
+    },
+    ...mapMutations(['onLogin'])
+
   }
 }
 </script>
