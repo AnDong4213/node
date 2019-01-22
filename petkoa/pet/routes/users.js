@@ -62,7 +62,7 @@ router.post('/login', async function (ctx, next) {
 
 router.get('/mypet', async (ctx, next) => {
   let loginbean = ctx.session.loginbean;
-  console.log(loginbean);
+  // console.log(loginbean);
   ctx.body = 'xxyy'
 })
 

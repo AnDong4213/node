@@ -35,13 +35,12 @@ export default {
   color: #2c3e50;
   margin-top: 0px;
 }
-.el-button--success {
+.el-button--success, .el-button--primary, .el-button--success:hover, .el-button--success:visited {
   color: #fff;
-  background-color: #ddd;
-  border-color: #ccc;
+  background-color: #ddd !important;
+  border-color: #ccc !important;
 }
-.el-button--primary {
-  color: #fff;
+.el-button--success.is-active, .el-button--success:active {
   background-color: #ddd;
   border-color: #ccc;
 }

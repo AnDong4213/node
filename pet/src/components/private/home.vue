@@ -3,41 +3,46 @@
     <el-col :span="2">&nbsp;</el-col>
     <el-col :span="4" style='background: yellow'>
         <el-menu default-active="1" class="el-menu-vertical-demo" style='height: 400px'>
-            <el-menu-item index="1"><i class="el-icon-setting"></i>&nbsp;&nbsp;宠物信息</el-menu-item>
-            <el-menu-item index="2"><i class="el-icon-setting"></i>&nbsp;&nbsp;宠物相册</el-menu-item>
-            <el-menu-item index="3"><i class="el-icon-setting"></i>&nbsp;&nbsp;宠物日志</el-menu-item>
-            <el-menu-item index="4"><i class="el-icon-setting"></i>宠物朋友圈</el-menu-item>
+            <el-menu-item index="1"><i class="el-icon-setting"></i>&nbsp;&nbsp;佩奇信息</el-menu-item>
+            <el-menu-item index="2"><i class="el-icon-setting"></i>&nbsp;&nbsp;佩奇相册</el-menu-item>
+            <el-menu-item index="3"><i class="el-icon-setting"></i>&nbsp;&nbsp;佩奇日志</el-menu-item>
+            <el-menu-item index="4"><i class="el-icon-setting"></i>佩奇朋友圈</el-menu-item>
             <el-menu-item index="5"><i class="el-icon-setting"></i>&nbsp;&nbsp;&nbsp;&nbsp;问&nbsp;&nbsp;&nbsp;&nbsp;答&nbsp;&nbsp;</el-menu-item>
         </el-menu>
     </el-col>
     <el-col :span="16" style='background: #eee'>
-        <form name='petform'>
+        <form name='petForm'>
             <table align='center' width='80%'>
                 <tr>
-                    <td><el-input name='nicheng' v-model="nicheng" placeholder="宠物昵称"></el-input></td>
-                    <td rowspan='5'><img src='https://ss0.baidu.com/73F1bjeh1BF3odCf/it/u=3337209369,4097509246&fm=85&s=91A38FBE0F104CCA033971C80300B0B0' />
+                    <td><el-input name='nicheng' v-model="petnicheng" placeholder="佩奇昵称"></el-input></td>
+                    <td rowspan='5'>
+                        <img src='http://www.runoob.com/wp-content/uploads/2015/07/7bf8bed24a17fbebd3e171f9630dbccb.gif' /><br />
+                        <el-button type="success" @click='chooseImg'>选择图片</el-button>
+                        <input ref="hideInput" @change="choosed" type="file" name="petimg" style="visibility: hidden;width: 20px;" />
+                        <span style="font-size: 12px;" ref="chooseLabel"></span>
                     </td>
                 </tr>
                 <tr>
                     <td align='left'>
-                        <el-select name='pettype' v-model="pettype" placeholder="请选择宠物类别">
+                        <el-select name='pettype' v-model="pettype" placeholder="请选择佩奇类别">
                             <el-option
                                 v-for="item in options"
                                 :key="item.value"
                                 :label="item.label"
-                                :value="item.value">
+                                :value="item.value"
+                            >
                             </el-option>
                         </el-select>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <el-input name='petsort' v-model="petsort" placeholder="宠物品种"></el-input>
+                        <el-input name='petsort' v-model="petsort" placeholder="佩奇品种"></el-input>
                     </td>
                 </tr>
                 <tr>
                     <td align='left'>
-                        <el-radio-group  v-model="sex">
+                        <el-radio-group  v-model="petsex">
                             <el-radio name='sex' :label="0">雄</el-radio>
                             <el-radio name='sex' :label="1">雌</el-radio>
                         </el-radio-group>
@@ -45,7 +50,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <el-input name='petage' v-model="petage" placeholder="宠物年龄"></el-input>
+                        <el-input name='age' v-model="petage" placeholder="佩奇年龄"></el-input>
                     </td>
                 </tr>
                 <tr>
@@ -54,8 +59,9 @@
                             name='introduce'
                             type="textarea"
                             :rows="2"
-                            placeholder="宠物介绍"
-                            v-model="textarea">
+                            placeholder="佩奇介绍"
+                            v-model="pettextarea"
+                        >
                         </el-input>
                     </td>
                 </tr>
@@ -72,7 +78,7 @@
 </template>
 
 <script>
-import { httpGet } from '@/common/httpBean'
+import { httpGet, httpPost, httpBinaryPost } from '@/common/httpBean'
 import { mapGetters } from 'vuex'
 export default {
   data () {
@@ -94,11 +100,11 @@ export default {
 		  label: '其他'
         }],
         petage: '',
-		pettype:'',
-		petsort:'',
-        sex:0,
-        nicheng: '',
-        textarea: ''
+		pettype: '',
+		petsort: '',
+        petsex: 0,
+        petnicheng: '',
+        pettextarea: ''
     }
   },
   computed: {
@@ -106,13 +112,23 @@ export default {
   },
   methods: {
     subpetInfo() {
-        
+        let formObj = new FormData(petForm);
+        formObj.set('pettype', this.pettype);
+        httpBinaryPost('/pet/subpetInfo', formObj, (data) => {
+            console.log(data)
+        })
+    },
+    chooseImg() {
+        this.$refs.hideInput.click();
+    },
+    choosed() {
+        this.$refs.chooseLabel.innerHTML = this.$refs.hideInput.value;
     }
   },
   mounted() {
-    httpGet('/users/mypet', (data) => {
+    /* httpGet('/users/mypet', (data) => {
         console.log(data)
-    })
+    }) */
   }
 }
 </script>

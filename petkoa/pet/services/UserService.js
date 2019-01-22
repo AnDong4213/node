@@ -42,7 +42,7 @@ class UserService {
       ctx.body = 0;
     }
   }
-  
+
 }
 
 exports.service = UserService

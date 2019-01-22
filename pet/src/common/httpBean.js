@@ -20,4 +20,15 @@ export function httpGet(url, callFun, formObj = {}) {
     })
 }
 
+export function httpBinaryPost(url, formObj, callFun) {
+    axios.post('/api' + url, formObj, {
+        'Content-Type': 'multiple/form-data'
+    })
+    .then(res => {
+        callFun(res.data)
+    })
+    .catch(err => {
+        alert(err)
+    })
+}
 
