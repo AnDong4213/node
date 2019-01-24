@@ -5,11 +5,11 @@ Vue.use(Vuex)
 
 let store = new Vuex.Store({
     state: {
-        loginBean: null
+        loginbean: null
     },
     getters: {
         logInfoBean(state) {
-            return state.loginBean
+            return state.loginbean
         }
     },
     mutations: {
@@ -18,7 +18,7 @@ let store = new Vuex.Store({
         },
         onLogin(state, data) {
             console.log(data.nicheng)
-            state.loginBean = data;
+            state.loginbean = data;
         }
     },
     actions: {

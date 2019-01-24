@@ -33,6 +33,17 @@ class PetService {
     ctx.body = rs;
   }
 
+  async mypetinfo(ctx) {
+    let loginbean = ctx.session.loginbean;
+    if (loginbean) {
+      let pet = {uid: loginbean.id};
+      let rs = await PetinfoModel.findAll({where: pet});
+      ctx.body = rs;
+    } else {
+      ctx.body = 'loginExpired';
+    }
+  }
+
 }
 
 exports.service = PetService
