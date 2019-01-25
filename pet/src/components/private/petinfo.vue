@@ -13,7 +13,7 @@
       </el-table-column>
       <el-table-column
         prop="nicheng"
-        label="宠物信息"
+        label="宠物昵称"
       >
       </el-table-column>
       <el-table-column
@@ -53,7 +53,8 @@ export default {
       console.log(id)
     },
     add() {
-
+      // this.$root.$children[0].$refs.diaLog.showDiaLog(petform);
+      this.$emit('changeFlagZero')
     }
   }
 }

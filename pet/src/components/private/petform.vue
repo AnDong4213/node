@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import { httpBinaryPost } from '@/common/httpBean'
+import { httpBinaryPost, httpGet } from '@/common/httpBean'
 export default {
   data () {
     return {
@@ -97,7 +97,15 @@ export default {
         let formObj = new FormData(petForm);
         formObj.set('pettype', this.pettype);
         httpBinaryPost('/pet/subpetInfo', formObj, (data) => {
-            console.log(data)
+            if (data != 'NO_PAGE') {
+                httpGet('/pet/mypetinfo', (data) => {
+                    if (data == 'loginExpired') {
+                        this.$router.push('/');
+                    } else {
+                        this.$emit('changeFlagOne',data)
+                    }
+                })
+            }
         })
     },
     chooseImg() {

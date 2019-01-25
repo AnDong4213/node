@@ -1,7 +1,7 @@
 class EmptyService {
 
   async out(ctx) {
-    ctx.body = 'NO PAGE'
+    ctx.body = 'NO_PAGE'
   }
 
 }

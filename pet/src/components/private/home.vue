@@ -11,8 +11,8 @@
         </el-menu>
     </el-col>
     <el-col :span="16" style='background: #eee'>
-        <petform v-if="this.flag == 0" />
-        <petinfo :dataArr="arr" v-if="this.flag > 0" />
+        <petform @changeFlagOne="changeFlagOne" v-if="this.flag == 0" />
+        <petinfo @changeFlagZero="changeFlagZero" :dataArr="arr" v-if="this.flag > 0" />
     </el-col>
     <el-col :span="2">&nbsp;</el-col>
 </el-row>
@@ -45,7 +45,13 @@ export default {
     })
   },
   methods: {
-    
+    changeFlagZero() {
+        this.flag = 0;
+    },
+    changeFlagOne(data) {
+        this.flag = 1;
+        this.arr = data;
+    }
   },
   components: {
     petform,
