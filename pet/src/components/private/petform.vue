@@ -4,7 +4,7 @@
             <tr>
                 <td><el-input name='nicheng' v-model="petnicheng" placeholder="佩奇昵称"></el-input></td>
                 <td rowspan='5'>
-                    <img src='http://www.runoob.com/wp-content/uploads/2015/07/7bf8bed24a17fbebd3e171f9630dbccb.gif' /><br />
+                    <img style="width: 246px;height: 246px;" :src='imgsrc' /><br />
                     <el-button type="success" @click='chooseImg'>选择图片</el-button>
                     <input ref="hideInput" @change="choosed" type="file" name="petimg" style="visibility: hidden;width: 20px;" />
                     <span style="font-size: 12px;" ref="chooseLabel"></span>
@@ -56,6 +56,7 @@
             <tr>
                 <td colspan='2' align='center'>
                     <el-button style="margin: 10px" type="success" @click='subpetInfo'>提交</el-button>
+                    <el-button style="margin: 10px" type="success" @click='returnPre'>返回</el-button>
                 </td>
             </tr>
         </table>
@@ -64,6 +65,8 @@
 
 <script>
 import { httpBinaryPost, httpGet } from '@/common/httpBean'
+import { mapGetters, mapMutations } from 'vuex'
+
 export default {
   data () {
     return {
@@ -88,32 +91,108 @@ export default {
 		petsort: '',
         petsex: 0,
         petnicheng: '',
-        pettextarea: ''
+        pettextarea: '',
+        imgsrc: 'http://www.runoob.com/wp-content/uploads/2015/07/7bf8bed24a17fbebd3e171f9630dbccb.gif'
     }
+  },
+  created() {
+    let item = this.getInfoItem;
+    if (item != null) {
+        this.petage = item.age;
+        switch(item.pettype) {
+            case 0: 
+                item.pettype = '狗'
+                break;
+            case 1: 
+                item.pettype = '猫'
+                break;
+            case 2: 
+                item.pettype = '鸟'
+                break;
+            case 3: 
+                item.pettype = '鱼'
+                break;
+            default:
+                item.pettype = '其他'
+        }
+        this.pettype = item.pettype;
+        this.petsort = item.petsort;
+        this.petsex = item.sex;
+        this.petnicheng = item.nicheng;
+        this.pettextarea = item.introduce;
+        this.imgsrc = '/api'+item.petimg;
+    }
+  },
+  computed: {
+    ...mapGetters(['getInfoItem', 'getPage'])
   },
   methods: {
     subpetInfo() {
         // console.log(petForm.petimg.files[0] == this.$refs.hideInput.files[0]);  // true
         let formObj = new FormData(petForm);
-        formObj.set('pettype', this.pettype);
-        httpBinaryPost('/pet/subpetInfo', formObj, (data) => {
-            if (data != 'NO_PAGE') {
-                httpGet('/pet/mypetinfo', (data) => {
-                    if (data == 'loginExpired') {
-                        this.$router.push('/');
-                    } else {
-                        this.$emit('changeFlagOne',data)
-                    }
-                })
+        let pettype = this.pettype;
+        switch(this.pettype) {
+            case '狗': 
+                pettype = 0
+                break;
+            case '猫': 
+                pettype = 1
+                break;
+            case '鸟': 
+                pettype = 2
+                break;
+            case '鱼': 
+                pettype = 3
+                break;
+            default:
+                pettype = 4
+        }
+        formObj.set('pettype', pettype);
+        let item = this.getInfoItem;
+        if (item != null) {
+            formObj.set('flag', '1');
+            formObj.set('id', item.id);
+        }
+        httpBinaryPost('/pet/subpetInfo', formObj, (res) => {
+            if (res != 'NO_PAGE') {
+                if (res.flag) {
+                    httpGet('/pet/mypetinfo?page=' + this.getPage, (data) => {
+                        if (data == 'loginExpired') {
+                            this.$router.push('/');
+                        } else {
+                            this.setPage(this.getPage)
+                            this.$emit('changeFlagOne',{
+                                data: data[1],
+                                count: data[0]
+                            })
+                        }
+                    })
+                } else {
+                    httpGet('/pet/mypetinfo', (data) => {
+                        if (data == 'loginExpired') {
+                            this.$router.push('/');
+                        } else {
+                            this.setPage(1)
+                            this.$emit('changeFlagOne',{
+                                data: data[1],
+                                count: data[0]
+                            })
+                        }
+                    })
+                }
             }
         })
+    },
+    returnPre() {
+        this.$emit('changeFlagOne')
     },
     chooseImg() {
         this.$refs.hideInput.click();
     },
     choosed() {
         this.$refs.chooseLabel.innerHTML = this.$refs.hideInput.value;
-    }
+    },
+    ...mapMutations(['setPage'])
   }
 }
 </script>

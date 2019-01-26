@@ -43,6 +43,20 @@ class UserService {
     }
   }
 
+  async getLoginBean(ctx) {
+    let loginbean = ctx.session.loginbean;
+    if (loginbean) {
+    		ctx.body = loginbean;
+    	} else {
+    		ctx.body = {};
+    	}
+  }
+
+  async logout(ctx){
+  	delete ctx.session.loginbean;
+  	ctx.body = 'ok';
+  }
+
 }
 
 exports.service = UserService

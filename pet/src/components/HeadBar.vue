@@ -12,14 +12,14 @@
   	  </el-input>
     </el-col>
     <el-col :span="6"  style='background: #f9fafc'>
-    	<el-button v-if="flag == 0" type="success" @click="showLogin">登录/注册</el-button>
-      <div v-if="flag == 1" style='font-size:1.2em'>
+    	<el-button v-if="getIsExpired == 'nologin'" type="success" @click="showLogin">登录/注册</el-button>
+      <div v-if="getIsExpired == 'login'" style='font-size:1.2em'>
         <span>主页</span>
         <span>空间</span>
         <span>寄养</span>
         <span>医院</span>
         <span>食物</span>
-        <span><router-link to='' @click.native='logout'>注销</router-link></span>
+        <span style="cursor: pointer;color: lightblue" @click='logout'>注销</span>
       </div>
     </el-col>
     <el-col :span="2">&nbsp;</el-col>
@@ -28,7 +28,9 @@
 
 <script>
 import Login from './Login'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
+import { httpGet } from '@/common/httpBean'
+
 export default {
   props: {
     data: {
@@ -37,18 +39,26 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['logInfoBean'])
+    ...mapGetters(['getIsExpired'])
   },
   data () {
     return {
-      input2: '',
-      flag: 0
+      input2: ''
     }
   },
   methods: {
     showLogin() {
       this.$parent.$refs.diaLog.showDiaLog(Login)
-    }
+    },
+    logout() {
+      httpGet('/user/logout', (res) => {
+        if (res == 'ok') {
+          this.$router.push('/')
+          this.setIsExpired('nologin')
+        }
+      })
+    },
+    ...mapMutations(['setIsExpired'])
   }
 }
 </script>

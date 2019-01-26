@@ -1,5 +1,7 @@
 const PetinfoModel = require('../models/PetinfoModel');
 const formidable = require('formidable');
+const path = require('path');
+const fs = require('fs');
 
 class PetService {
   async subpetInfo(ctx) {
@@ -25,22 +27,78 @@ class PetService {
         }
       })
     });
-    fields.uid = loginbean.id;
-    fields.updtime = new Date();
-	  fields.createtime = new Date();
-    // console.log(fields);
-    let rs = await PetinfoModel.create(fields);
-    ctx.body = rs;
+    let rs;
+    if (fields.flag) {
+      fields.updtime = new Date();
+      let pet = {id: fields.id, uid: loginbean.id};
+      let rsimg = await PetinfoModel.findOne({where: pet});
+      let road = path.join(__dirname, '../public/', rsimg.petimg);
+      fs.unlink(road, (err) => {
+        if (err) {
+          return console.error(err);
+        };
+      });
+      rs = await PetinfoModel.update(fields, {where: pet});
+      if (rs[0] == 1) {
+        ctx.body = {
+          flag: 'ok'
+        }
+      }
+    } else {
+      fields.uid = loginbean.id;
+      fields.updtime = new Date();
+  	  fields.createtime = new Date();
+      rs = await PetinfoModel.create(fields);
+      ctx.body = rs;
+    }
   }
 
   async mypetinfo(ctx) {
     let loginbean = ctx.session.loginbean;
     if (loginbean) {
       let pet = {uid: loginbean.id};
-      let rs = await PetinfoModel.findAll({where: pet});
-      ctx.body = rs;
+      let count = await PetinfoModel.count({where: pet});
+      let page = 1;
+      if (ctx.query.page) {
+        page = ctx.query.page;
+      };
+      let pageSize = 4;
+      let rs = await PetinfoModel.findAll({where: pet, offset: (page-1)*pageSize, limit: pageSize});
+      ctx.body = [count, rs];
     } else {
       ctx.body = 'loginExpired';
+    }
+  }
+
+  async delpetInfo(ctx) {
+    let loginbean = ctx.session.loginbean;
+    if (loginbean) {
+      let pet = {id: ctx.query.id, uid: loginbean.id};
+      let rsimg = await PetinfoModel.findOne({where: pet});
+      let road = path.join(__dirname, '../public/', rsimg.petimg);
+      /*let del = await new Promise((resolve, reject) => {
+        fs.unlink(road, (err) => {
+          if (err) {
+            return console.error(err);
+          };
+          resolve('ok')
+        });
+      })*/
+      fs.unlink(road, (err) => {
+        if (err) {
+          return console.error(err);
+        };
+      });
+      let rs = await PetinfoModel.destroy({where: pet});
+      if (rs == 1) {
+        ctx.body = {
+          result: true
+        }
+      } else {
+        ctx.body = {
+          result: false
+        }
+      }
     }
   }
 

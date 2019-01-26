@@ -5,20 +5,30 @@ Vue.use(Vuex)
 
 let store = new Vuex.Store({
     state: {
-        loginbean: null
+        infoItem: null,
+        prevPage: null,
+        isExpired: null
     },
     getters: {
-        logInfoBean(state) {
-            return state.loginbean
+        getInfoItem(state) {
+            return state.infoItem
+        },
+        getPage(state) {
+            return state.prevPage
+        },
+        getIsExpired(state) {
+            return state.isExpired
         }
     },
     mutations: {
-        onZhuce(state, data) {
-            
+        setInfoItem(state, data) {
+            state.infoItem = data;
         },
-        onLogin(state, data) {
-            console.log(data.nicheng)
-            state.loginbean = data;
+        setPage(state, data) {
+            state.prevPage = data;
+        },
+        setIsExpired(state, data) {
+            state.isExpired = data;
         }
     },
     actions: {

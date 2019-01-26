@@ -26,36 +26,86 @@
         </template>
       </el-table-column>
     </el-table>
+    <table style="width: 100%;">
+      <tr style="align: center;">
+        <td>
+          <el-pagination
+            @current-change="handleCurrentChange"
+            :current-page.sync="currentPage"
+            :page-size="pageSize"
+            layout="total, prev, pager, next"
+            :total="count">
+          </el-pagination>
+        </td>
+      </tr>
+    </table>
     <el-button style="margin: 10px 0" type="primary" @click='add'>增加</el-button>
   </div>
 </template>
 
 <script>
+import { httpGet } from '@/common/httpBean'
+import { mapMutations, mapGetters } from 'vuex'
+
 export default {
   props: {
     dataArr: {
       type: Array,
       default: []
+    },
+    count: {
+      type: Number,
+      default: 0
     }
   },
   data () {
     return {
+      pageSize: 4,
+      currentPage: 1
     }
   },
   created() {
-    // console.log(this.dataArr)
+    this.currentPage = this.getPage == null ? this.currentPage : this.getPage;
+  },
+  computed: {
+    ...mapGetters(['getPage'])
   },
   methods: {
     updPetInfo(row) {
-      console.log(row)
+      this.setInfoItem(row)
+      this.setPage(this.currentPage)
+      this.$emit('changeFlagZero')
     },
     delPetInfo(id) {
-      console.log(id)
+      if (confirm('确定删除吗?')) {
+        httpGet('/pet/delpetInfo?id=' + id, (data) => {
+          if (data.result) {
+            this.handleCurrentChange(1);
+            this.currentPage = 1;
+          }
+        });
+      }
     },
     add() {
       // this.$root.$children[0].$refs.diaLog.showDiaLog(petform);
-      this.$emit('changeFlagZero')
-    }
+      this.$emit('changeFlagZero');
+      this.setInfoItem(null);
+      this.setPage(this.currentPage)
+    },
+    handleCurrentChange(page) {
+      this.currentPage = page;
+      httpGet('/pet/mypetinfo?page='+page, (data) => {
+        if (data == 'loginExpired') {
+          this.$router.push('/');
+        } else {
+          this.$emit('changeFlagZero',{
+            data: data[1],
+            count: data[0]
+          })
+        }
+      })
+    },
+    ...mapMutations(['setInfoItem','setPage'])
   }
 }
 </script>

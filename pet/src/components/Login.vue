@@ -119,9 +119,8 @@ export default {
       }
       httpPost('/user/login', formObj, (data) => {
         if (data !== 0) {
-          this.onLogin(data)
+          this.setIsExpired('login')
           this.$parent.$parent.hideDiaLog();
-          this.$parent.$parent.$parent.$refs.headBar.flag = 1;
           this.loginemail = '';
           this.loginpwd = '';
           this.$router.push('/private/home');
@@ -130,7 +129,7 @@ export default {
         }
       })
     },
-    ...mapMutations(['onLogin'])
+    ...mapMutations(['setIsExpired'])
 
   }
 }
