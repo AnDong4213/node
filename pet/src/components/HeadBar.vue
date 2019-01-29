@@ -2,7 +2,7 @@
   <el-row>
     <el-col :span="2">&nbsp;</el-col>
     <el-col :span="4" style='background: #f9fafc;font-size:2em;color: #eee'>
-      <i class="el-icon-menu"></i>宠物空间
+      <i class="el-icon-menu"></i>{{getbean ? getbean.nicheng : '佩奇'}}空间
     </el-col>
     <el-col :span="10" style='background: #f9fafc'>
     	<el-input
@@ -14,7 +14,7 @@
     <el-col :span="6"  style='background: #f9fafc'>
     	<el-button v-if="getIsExpired == 'nologin'" type="success" @click="showLogin">登录/注册</el-button>
       <div v-if="getIsExpired == 'login'" style='font-size:1.2em'>
-        <span>主页</span>
+        <span @click="showHome">主页</span>
         <span>空间</span>
         <span>寄养</span>
         <span>医院</span>
@@ -33,13 +33,13 @@ import { httpGet } from '@/common/httpBean'
 
 export default {
   props: {
-    data: {
+    nicheng: {
       type: String,
-      default: 'uu'
+      default: ''
     }
   },
   computed: {
-    ...mapGetters(['getIsExpired'])
+    ...mapGetters(['getIsExpired', 'getbean'])
   },
   data () {
     return {
@@ -54,11 +54,15 @@ export default {
       httpGet('/user/logout', (res) => {
         if (res == 'ok') {
           this.$router.push('/')
-          this.setIsExpired('nologin')
+          this.setIsExpired('nologin');
+          this.setbean(null);
         }
       })
     },
-    ...mapMutations(['setIsExpired'])
+    ...mapMutations(['setIsExpired', 'setbean']),
+    showHome() {
+      this.$router.push('/private/home');
+    }
   }
 }
 </script>

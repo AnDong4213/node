@@ -7,7 +7,8 @@ let store = new Vuex.Store({
     state: {
         infoItem: null,
         prevPage: null,
-        isExpired: null
+        isExpired: null,
+        loginbean: null
     },
     getters: {
         getInfoItem(state) {
@@ -18,6 +19,9 @@ let store = new Vuex.Store({
         },
         getIsExpired(state) {
             return state.isExpired
+        },
+        getbean(state) {
+            return state.loginbean
         }
     },
     mutations: {
@@ -29,10 +33,10 @@ let store = new Vuex.Store({
         },
         setIsExpired(state, data) {
             state.isExpired = data;
+        },
+        setbean(state, data) {
+            state.loginbean = data;
         }
-    },
-    actions: {
-
     }
 })
 

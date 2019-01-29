@@ -8,8 +8,8 @@ const logger = require('koa-logger')
 const cors = require('koa-cors')
 const session = require('koa-session')
 
-const index = require('./routes/index')
-const users = require('./routes/users')
+/*const index = require('./routes/index')
+const users = require('./routes/users')*/
 const api = require('./routes/api')
 
 // error handler
@@ -42,8 +42,8 @@ app.use(session({
 
 app.use(cors())
 // routes
-app.use(index.routes(), index.allowedMethods())
-app.use(users.routes(), users.allowedMethods())
+/*app.use(index.routes(), index.allowedMethods())
+app.use(users.routes(), users.allowedMethods())*/
 app.use(api.routes(), api.allowedMethods())
 
 // error-handling

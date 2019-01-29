@@ -14,6 +14,11 @@ import { mapMutations } from 'vuex'
 
 export default {
   name: 'App',
+  data() {
+    return {
+      nicheng: ''
+    }
+  },
   components: {
     headBar: HeadBar,
     diaLog: DiaLog
@@ -24,14 +29,17 @@ export default {
     // console.log(this.$refs.diaLog);  // undefined
     httpGet('/user/getLoginBean', (res) => {
       if (res.nicheng) {
+        this.setbean(res)
         this.setIsExpired('login')
       } else {
-        this.setIsExpired('nologin')
+        this.setIsExpired('nologin');
+        this.$router.push('/');
+        this.setbean(null)
       }
     })
   },
   methods: {
-    ...mapMutations(['setIsExpired'])
+    ...mapMutations(['setIsExpired', 'setbean'])
   },
   mounted() {
     // console.log(this.$refs.diaLog);  // 有值
@@ -40,21 +48,26 @@ export default {
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 0px;
-}
-.el-button--success, .el-button--primary, .el-button--success:hover, .el-button--success:visited {
-  color: #fff;
-  background-color: #ddd !important;
-  border-color: #ccc !important;
-}
-.el-button--success.is-active, .el-button--success:active {
-  background-color: #ddd;
-  border-color: #ccc;
-}
+  #app {
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+    margin-top: 0px;
+  }
+  .el-button--success, .el-button--primary, .el-button--success:hover, .el-button--success:visited {
+    color: #fff;
+    background-color: #ddd !important;
+    border-color: #ccc !important;
+  }
+  .el-button--success.is-active, .el-button--success:active {
+    background-color: #ddd;
+    border-color: #ccc;
+  }
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
 </style>

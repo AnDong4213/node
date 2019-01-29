@@ -123,13 +123,14 @@ export default {
           this.$parent.$parent.hideDiaLog();
           this.loginemail = '';
           this.loginpwd = '';
+          this.setbean(data);
           this.$router.push('/private/home');
         } else {
           alert('账号/密码错误')
         }
       })
     },
-    ...mapMutations(['setIsExpired'])
+    ...mapMutations(['setIsExpired', 'setbean'])
 
   }
 }
