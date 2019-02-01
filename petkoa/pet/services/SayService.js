@@ -65,9 +65,6 @@ class SayService {
     };
   }
 
-
-
-
 }
 
 exports.service = SayService
