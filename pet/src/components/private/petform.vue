@@ -6,7 +6,7 @@
                 <td rowspan='5'>
                     <img style="width: 246px;height: 246px;" :src='imgsrc' /><br />
                     <el-button type="success" @click='chooseImg'>选择图片</el-button>
-                    <input ref="hideInput" @change="choosed" type="file" name="petimg" style="visibility: hidden;width: 20px;" />
+                    <input ref="hideInput" accept="image/*" @change="choosed" type="file" name="petimg" style="visibility: hidden;width: 20px;" />
                     <span style="font-size: 12px;" ref="chooseLabel"></span>
                 </td>
             </tr>

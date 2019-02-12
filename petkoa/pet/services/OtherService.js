@@ -17,14 +17,19 @@ class OtherService {
               resolve('0');
               return;
           };
-      		console.log(files.petimg.path);
+          // console.log(files.petimg.path);
+      		console.log(files);
       		console.log(fields);
           resolve(fields);
         })
     });
 
   	ctx.body = fields;
+  }
 
+  async ajax(ctx) {
+    let loginbean = ctx.session.loginbean;
+    ctx.body = loginbean;
   }
 
 }

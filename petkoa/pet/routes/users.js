@@ -66,4 +66,10 @@ router.get('/mypet', async (ctx, next) => {
   ctx.body = 'xxyy'
 })
 
+router.post('/form', async (ctx, next) => {
+  let loginbean = ctx.session.loginbean;
+  console.log(ctx.request.body);
+  ctx.body = ctx.request.body
+})
+
 module.exports = router

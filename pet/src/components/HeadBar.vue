@@ -2,7 +2,8 @@
   <el-row>
     <el-col :span="2">&nbsp;</el-col>
     <el-col :span="4" style='background: #f9fafc;font-size:2em;color: #eee'>
-      <i class="el-icon-menu"></i>{{getbean ? getbean.nicheng : '佩奇'}}空间
+      <i class="el-icon-menu"></i>
+      <span @click="returnIndex" style="cursor: pointer;">{{getbean ? getbean.nicheng : '佩奇'}}空间</span>
     </el-col>
     <el-col :span="10" style='background: #f9fafc'>
     	<el-input
@@ -14,7 +15,7 @@
     <el-col :span="6"  style='background: #f9fafc'>
     	<el-button v-if="getIsExpired == 'nologin'" type="success" @click="showLogin">登录/注册</el-button>
       <div v-if="getIsExpired == 'login'" style='font-size:1.2em'>
-        <span @click="showHome">主页</span>
+        <span @click="showHome" style="cursor: pointer;">主页</span>
         <span>空间</span>
         <span>寄养</span>
         <span>医院</span>
@@ -62,6 +63,9 @@ export default {
     ...mapMutations(['setIsExpired', 'setbean']),
     showHome() {
       this.$router.push('/private/home');
+    },
+    returnIndex() {
+      this.$router.push('/');
     }
   }
 }

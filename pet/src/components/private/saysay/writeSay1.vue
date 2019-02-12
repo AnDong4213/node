@@ -31,12 +31,6 @@
                             multiple
                         />
                         <br/>
-                        <input 
-                            type='file' 
-                            name='petimg2' 
-                            @change='choosed2'
-                            multiple
-                        />
                         <ul class="uldel">
                             <li v-for="(petphoto, index) in petphotos" :key="petphoto.key">
                                 <img 
@@ -73,8 +67,7 @@ export default {
     return {
         petimgs:[{key: 'a'},{key: 'b'}],
         petphotos:[],
-        textarea: '',
-        fileObj: null
+        textarea: ''
     }
   },
   methods: {
@@ -82,10 +75,6 @@ export default {
         this.petimgs.push({key: petImgN});
         this.$refs.sayform.petimg[petImgN].click();
         petImgN++;
-    },
-    choosed2(e) {
-        let files = e.currentTarget.files;
-        this.fileObj = files;
     },
     choosed(e) {
         let files = e.currentTarget.files;
@@ -101,21 +90,30 @@ export default {
             petImgN++;
         }
     },
+    // console.log(e.target == file);  // true
+    // console.log(fileSrc);  // blob:http://localhost:8080/1f521ca3-5bf4-4124-a78b-29829aced28a
     pubSay() {
-        let files = this.fileObj;
-        for (let i = 0; i < files.length; i++) {
-            let formObj = new FormData();
-            formObj.append('petimg', files[i]);
-            httpBinaryPost('/say/subSay', formObj, (res) => {
-                if (res.result == 'ok') {
-                    this.$message({
-                        showClose: true,
-                        message: '成功写说说...',
-                        type: 'success'
-                    });
-                }
-            })
-        }
+        let formObj = new FormData(sayform);
+        httpBinaryPost('/say/subSay', formObj, (res) => {
+            if (res.result == 'ok') {
+                let petphotos = JSON.parse(JSON.stringify(this.petphotos));
+                let petimgs = JSON.parse(JSON.stringify(this.petimgs));
+                petphotos.splice(0, petphotos.length);
+                let petimg = petimgs.reduce((cur, next) => {
+                    next.key !== 'a' && next.key !== 'b' ? null : cur.push(next);
+                    return cur;
+                }, []);
+                this.petphotos = petphotos;
+                this.petimgs = petimg;
+                this.textarea = '';
+                petImgN = 0;
+                this.$message({
+                    showClose: true,
+                    message: '成功写说说...',
+                    type: 'success'
+                });
+            }
+        })
     },
     del(id) {
         /* let petphotos = JSON.parse(JSON.stringify(this.petphotos));
