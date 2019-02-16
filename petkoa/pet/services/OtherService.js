@@ -19,12 +19,15 @@ class OtherService {
               return;
           };
       		// console.log(files);
-          resolve(fields);
+          // resolve(fields);
+          setTimeout(() => {
+              resolve(fields);
+          }, 2000)
         })
     });
-    console.log(fields);
+    // console.log(fields);
 
-  	ctx.body = fields;
+    ctx.body = fields;
   }
 
   async ajax(ctx) {

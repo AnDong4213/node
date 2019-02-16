@@ -5,6 +5,9 @@ const json = require('koa-json')
 const onerror = require('koa-onerror')
 const bodyparser = require('koa-bodyparser')
 const logger = require('koa-logger')
+const mongoose = require('mongoose')
+const session = require('koa-session');
+const Redis = require('koa-redis')
 
 const pv = require('./midware/pv')
 const m1 = require('./midware/m1')
@@ -33,6 +36,7 @@ app.use(require('koa-static')(__dirname + '/public'))
 app.use(views(__dirname + '/views', {
   extension: 'ejs'
 }))
+mongoose.connect('mongodb://localhost/dbs', {useNewUrlParser: true});
 
 // logger
 app.use(async (ctx, next) => {
@@ -41,6 +45,16 @@ app.use(async (ctx, next) => {
   const ms = new Date() - start
   console.log(`${ctx.method} ${ctx.url} - ${ms}ms`)
 })
+
+app.keys = ['koalearn', 'key']
+app.use(session({
+  key: 'mt',
+  prefix: 'mtpr',
+  store: new Redis({
+    expires: 20*60*1000,
+    haha: 'hehe'
+  })
+}, app));
 
 // routes
 app.use(index.routes(), index.allowedMethods())
