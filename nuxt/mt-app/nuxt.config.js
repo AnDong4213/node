@@ -1,6 +1,5 @@
 const pkg = require('./package')
 
-
 module.exports = {
   mode: 'universal',
 
@@ -22,7 +21,7 @@ module.exports = {
   /*
   ** Customize the progress-bar color
   */
-  loading: { color: '#fff' },
+  loading: { color: '#FFFFFF' },
 
   /*
   ** Global CSS
@@ -44,7 +43,7 @@ module.exports = {
   ** Nuxt.js modules
   */
   modules: [
-    // Doc: https://axios.nuxtjs.org/usage
+    // Doc: https://github.com/nuxt-community/axios-module#usage
     '@nuxtjs/axios'
   ],
   /*
@@ -58,13 +57,21 @@ module.exports = {
   ** Build configuration
   */
   build: {
-    transpile: [/^element-ui/],
-    
     /*
     ** You can extend webpack config here
     */
     extend(config, ctx) {
-      cache: true
-    }
+      // Run ESLint on save
+      if (ctx.isDev && ctx.isClient) {
+        config.module.rules.push({
+          enforce: 'pre',
+          test: /\.(js|vue)$/,
+          loader: 'eslint-loader',
+          exclude: /(node_modules)/
+        })
+      }
+    },
+    // https://github.com/nuxt/nuxt.js/issues/3804
+    cache:false
   }
 }

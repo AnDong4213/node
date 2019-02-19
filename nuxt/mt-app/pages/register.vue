@@ -90,6 +90,7 @@
 </template>
 
 <script>
+import CryptoJS from 'crypto-js'
 export default {
   layout: 'blank',
   data() {
@@ -114,6 +115,12 @@ export default {
           required: true,
           type: 'email',
           message: '请输入邮箱',
+          trigger: 'blur'
+        }],
+        code: [{
+          required: true,
+          type: 'string',
+          message: '请输入验证码',
           trigger: 'blur'
         }],
         pwd: [{
@@ -142,12 +149,81 @@ export default {
   },
   methods: {
     register() {
+      let that = this
       this.$refs.ruleForm.validate((valid) => {
-        /* console.log(valid)
-        console.log(this.ruleForm) */
+        if (valid) {
+          console.log(that.ruleForm)
+          that.$axios.post('/users/signup', {
+            username: window.encodeURIComponent(that.ruleForm.name),
+            password: CryptoJS.MD5(that.ruleForm.pwd).toString(),
+            email: that.ruleForm.email,
+            code: that.ruleForm.code
+          }).then(({
+            status,
+            data
+          }) => {
+            if (status === 200) {
+              console.log(data)
+              if (data && data.code === 0) {
+                console.log('jjjjjjjjjjjjjjjj')
+                location.href = '/login'
+              } else {
+                that.error = data.msg
+              }
+            } else {
+              that.error = `服务器出错，错误码:${status}`
+            }
+            setTimeout(() => {
+              that.error = ''
+            }, 15000)
+          })
+
+        }
       })
     },
     sendMsg() {
+      let that = this
+      let namePass, emailPass;
+      if (this.timerid) {
+        return false
+      }
+      this.$refs.ruleForm.validateField('name', (valid) => {
+        namePass = valid
+      })
+      this.statusMsg = ''
+      if (namePass) {
+        return false
+      }
+      this.$refs.ruleForm.validateField('email', (valid) => {
+        emailPass = valid
+      })
+      if (!namePass && !emailPass) {
+        this.$axios.post('/users/verify', {
+          username: encodeURIComponent(that.ruleForm.name),
+          email: that.ruleForm.email
+        }).then(({
+          status,
+          data
+        }) => {
+          console.log(status)
+          console.log(data)
+          if (status === 200 && data && data.code === 0) {
+            let count = 60;
+            that.statusMsg = `验证码已发送,剩余${count--}秒`
+            that.timerid = setInterval(() => {
+              that.statusMsg = `验证码已发送,剩余${count--}秒`
+              if (count === 0) {
+                clearInterval(that.timerid)
+                that.timerid = null
+                that.statusMsg = ''
+              }
+            }, 1000)
+          } else {
+            that.statusMsg = data.msg
+          }
+        })
+
+      }
 
     }
   },

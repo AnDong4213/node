@@ -16,7 +16,7 @@ export default {
       return '1021909498@qq.com'
     },
     get pass() {
-      return ''
+      return 'baiujfclrkrubdfb'
     },
     get code() {
       return ()=>{
@@ -25,7 +25,7 @@ export default {
     },
     get expire() {
       return () => {
-        return new Date().getTime() +  60*60*1000
+        return new Date().getTime() +  60*60*1000*2
       }
     }
 
