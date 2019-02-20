@@ -3,7 +3,7 @@ function m1(ctx) {
 }
 
 module.exports = function () {
-  return async function(ctx, next) {
+  return async (ctx, next) => {
     console.log('m1 start');
     m1(ctx);
     await next();

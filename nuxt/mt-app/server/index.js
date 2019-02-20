@@ -11,7 +11,8 @@ const Redis = require('koa-redis')
 const json = require('koa-json')
 
 import dbConfig from './dbs/config'
-import passport from './interface/utils/passport'
+// import passport from './interface/utils/passport'
+const passport = require('koa-passport')
 import users from './interface/users'
 
 const app = new Koa()
