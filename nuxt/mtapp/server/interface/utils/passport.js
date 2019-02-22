@@ -30,13 +30,13 @@ passport.use(new LocalStrategy(async (username, password, done) => {
 // 用户每次进来时，自动的通过session去验证...http通信是没有状态的   从cookie中把session的信息提出来，跟服务端的session做验证对比..
 
 //  用户验证成功登录后，把用户的数据存储到session中
-passport.serializeUser(function(user, done){
+passport.serializeUser(function(user, done) {
   // console.log(user, 'passport1.js')
   done(null, user)
 })
 
 // 在每次请求的时候，会从session中读取用户对象
-passport.deserializeUser(function(user, done){
+passport.deserializeUser(function(user, done) {
   // console.log(user, 'passport2.js')
   return done(null, user)
 })

@@ -1,6 +1,6 @@
 <template>
   <section class="m-istyle">
-    <dl>
+    <dl @mouseover="over">
       <dt>有格调</dt>
       <dd
         :class="{active: kind === 'all'}"
@@ -38,7 +38,7 @@
         品质出游
       </dd>
     </dl>
-    <!-- <ul class="ibody">
+    <ul class="ibody">
       <li
         v-for="item in cur"
         :key="item.title"
@@ -58,7 +58,7 @@
           </ul>
         </el-card>
       </li>
-    </ul> -->
+    </ul>
   </section>
 </template>
 
@@ -77,10 +77,61 @@ export default {
     }
   },
   computed: {
-    
+    cur: function() {
+      return this.list[this.kind]
+    }
+  },
+  async mounted() {
+    let {status,data:{count, pois}}=await this.$axios.get('/search/resultsByKeywords',{
+      params:{
+        keyword: '景点',
+        city: this.$store.state.geo.position.city
+      }
+    });
+    if (status === 200 && count>0) {
+      let r = pois.filter(item=>item.photos.length).map(item=>{
+        return {
+          title: item.name,
+          pos: item.type.split(';')[0],
+          price: item.biz_ext.cost||'暂无',
+          img: item.photos[0].url,
+          url: '//abc.com'
+        }
+      })
+      this.list[this.kind] = r.slice(0,9)
+    } else {
+      this.list[this.kind] = []
+    }
   },
   methods: {
-    
+    over: async function(e) {  // 这里不能用箭头函数...
+      let dom = e.target;
+      let tag = dom.tagName.toLowerCase();
+      if (tag === 'dd') {
+        this.kind = dom.getAttribute('kind')
+        let keyword = dom.getAttribute('keyword')
+        let {status,data:{count, pois}}=await this.$axios.get('/search/resultsByKeywords', {
+          params:{
+            keyword,
+            city: this.$store.state.geo.position.city
+          }
+        })
+        if (status === 200 && count > 0) {
+          let r = pois.filter(item => item.photos.length).map(item => {
+            return {
+              title: item.name,
+              pos: item.type.split(';')[0],
+              price: item.biz_ext.cost || '暂无',
+              img: item.photos[0].url,
+              url: '//abc.com'
+            }
+          })
+          this.list[this.kind] = r.slice(0, 9);
+        } else {
+          this.list[this.kind] = []
+        }
+      }
+    }
   },
 }
 </script>

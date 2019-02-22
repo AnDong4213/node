@@ -29,10 +29,10 @@
             class="hotPlace">
             <dt>热门搜索</dt>
             <dd
-              v-for="(item,idx) in hotPlace"
+              v-for="(item,idx) in $store.state.home.hotPlace.slice(0, 6)"
               :key="idx"
             >
-              <a href="">{{ item }}</a>
+              <a href="">{{ item.name }}</a>
             </dd>
           </dl>
           <dl
@@ -43,12 +43,12 @@
               v-for="(item,idx) in searchList"
               :key="idx"
             >
-              <a href="">{{ item }}</a>
+              <a href="">{{ item.name }}</a>
             </dd>
           </dl>
         </div>
         <p class="suggest">
-          <a href=""></a>
+          <a href="#" v-for="(item,idx) in $store.state.home.hotPlace.slice(0, 6)" :key="idx">{{ item.name }}</a>
         </p>
         <ul class="nav">
           <li>
@@ -84,13 +84,14 @@
 </template>
 
 <script>
+import _ from 'lodash'
 export default {
   data() {
     return {
       search: '',
       isFocus: false,
-      hotPlace: ['dd', '99'],
-      searchList: ['dd', '99']
+      hotPlace: [],
+      searchList: []
     }
   },
   computed: {
@@ -110,9 +111,19 @@ export default {
         this.isFocus = false
       }, 200)
     },
-    input() {
-
-    }
-  },
+    input: _.debounce(async function() {
+      if (this.search !== '') {
+        let city = this.$store.state.geo.position.city.replace('市','');
+        this.searchList = []
+        let { status, data: {top} } = await this.$axios.get('/search/top', {
+          params: {
+            input: this.search,
+            city
+          }
+        })
+        this.searchList = top.slice(0, 10)
+      }
+    }, 300)
+  }
 }
 </script>
