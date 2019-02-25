@@ -17,6 +17,8 @@ const passport = require('koa-passport')
 import users from './interface/users'
 import geo from './interface/geo'
 import search from './interface/search'
+import categroy from './interface/categroy'
+import cart from './interface/cart'
 
 const app = new Koa()
 
@@ -59,10 +61,12 @@ async function start() {
     const builder = new Builder(nuxt)
     await builder.build()
   }
-
+  
   app.use(users.routes(), users.allowedMethods())
   app.use(geo.routes(), geo.allowedMethods())
   app.use(search.routes(), search.allowedMethods())
+  app.use(categroy.routes(), categroy.allowedMethods())
+  app.use(cart.routes(), cart.allowedMethods())
 
   app.use(ctx => {
     ctx.status = 200

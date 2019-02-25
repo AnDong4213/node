@@ -32,7 +32,7 @@
               v-for="(item,idx) in $store.state.home.hotPlace.slice(0, 6)"
               :key="idx"
             >
-              <a href="">{{ item.name }}</a>
+              <a :href="'/products?keyword='+encodeURIComponent(item.name)">{{ item.name }}</a>
             </dd>
           </dl>
           <dl
@@ -43,12 +43,18 @@
               v-for="(item,idx) in searchList"
               :key="idx"
             >
-              <a href="">{{ item.name }}</a>
+              <a :href="'/products?keyword='+encodeURIComponent(item.name)">{{ item.name }}</a>
             </dd>
           </dl>
         </div>
         <p class="suggest">
-          <a href="#" v-for="(item,idx) in $store.state.home.hotPlace.slice(0, 6)" :key="idx">{{ item.name }}</a>
+          <a 
+            :href="'/products?keyword='+encodeURIComponent(item.name)"
+            v-for="(item,idx) in $store.state.home.hotPlace.slice(0, 6)" 
+            :key="idx"
+          >
+            {{ item.name }}
+          </a>
         </p>
         <ul class="nav">
           <li>
