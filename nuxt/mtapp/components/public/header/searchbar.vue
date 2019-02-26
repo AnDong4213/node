@@ -8,6 +8,8 @@
         <img
           src="//s0.meituan.net/bs/fe-web-meituan/e5eeaef/img/logo.png"
           alt="美团"
+          @click="returnIndex"
+          style="cursor: pointer;"
         />
       </el-col>
 
@@ -129,7 +131,10 @@ export default {
         })
         this.searchList = top.slice(0, 10)
       }
-    }, 300)
+    }, 300),
+    returnIndex() {
+      this.$router.push('/')
+    }
   }
 }
 </script>

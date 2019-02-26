@@ -13,6 +13,7 @@ router.post('/create', async ctx => {
     }
   } else {
     let time = Date()
+    // console.log(Math.random() * 1000 + time, 'hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh')
     let cartNo = md5(Math.random() * 1000 + time).toString()
     let {
       params: {
@@ -39,7 +40,7 @@ router.post('/create', async ctx => {
 
 router.post('/getCart', async ctx => {
   let {id} = ctx.request.body
-  console.log(id);
+  // console.log(id);
   try {
     let result = await Cart.findOne({cartNo: id})
     ctx.body = {
