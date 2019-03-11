@@ -12,7 +12,7 @@ const getPostData = (req) => {
       resolve({})
       return
     }
-    let postData = ''
+    let postData = '';
     req.on('data', chunk => {
       postData += chunk.toString()
     })
@@ -36,24 +36,40 @@ const serverHandle = (req, res) => {
   req.path = url.split('?')[0];
 
   // 解析query
-  req.query = querystring.parse(url.split('?')[1])
+  req.query = querystring.parse(url.split('?')[1]);
+
+  // 解析coookie
+  req.cookie = {}
+  const cookieStr = req.headers.cookie || '';
+  cookieStr.split(';').forEach(item => {
+    if (!item) {
+      return
+    }
+    let arr = item.split('='), key = arr[0], val = arr[1];
+    req.cookie[key] = val;
+  })
 
   getPostData(req).then(postData => {
     req.body = postData;
 
-    let blogData = handleBlogRouter(req, res);
-    if (blogData) {
-      res.end(
-        JSON.stringify(blogData)
-      )
+    let blogResult = handleBlogRouter(req, res);
+    if (blogResult) {
+      blogResult.then(blogData => {
+        res.end(
+          JSON.stringify(blogData)
+        )
+      })
       return
     }
 
-    let userData = handleUserRouter(req, res);
-    if (userData) {
-      res.end(
-        JSON.stringify(userData)
-      )
+    // 处理user路由...
+    let userResult = handleUserRouter(req, res);
+    if (userResult) {
+      userResult.then(userData => {
+        res.end(
+          JSON.stringify(userData)
+        )
+      })
       return
     }
 
