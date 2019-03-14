@@ -61,20 +61,6 @@ const serverHandle = (req, res) => {
       req.cookie[key] = val;
     })
 
-    // 解析cookie
-    /* let needSetCookie = false
-    let userId = req.cookie.userid
-    if (userId) {
-      if (!SESSION_DATA[userId]) {
-        SESSION_DATA[userId] = {}
-      }
-    } else {
-      needSetCookie = true
-      userId = `${Date.now()}_${Math.random()}`
-      SESSION_DATA[userId] = {}
-    }
-    req.session = SESSION_DATA[userId]; */
-
     // 解析 session （使用 redis）
     let needSetCookie = false
     let userId = req.cookie.userid
@@ -115,6 +101,7 @@ const serverHandle = (req, res) => {
           if (needSetCookie) {
             res.setHeader('Set-Cookie', `userid=${userId}; path=/; httpOnly; expires=${getCookieExpires()}`)
           }
+          console.log(JSON.stringify(userData))
           res.end(
             JSON.stringify(userData)
           )
@@ -126,11 +113,15 @@ const serverHandle = (req, res) => {
       res.write('404 Not Found\n');
       res.end()
     })
-  }
 
+  }
 }
 
 module.exports = serverHandle;
 //  env: process.env.NODE_ENV
 
+/* res.writeHead(200, {
+  'Content-Type': 'text/html;charset=utf-8',
+  'Set-Cookie': ['id=123;max-age=20','abc=456;domain=test.com']
+}) */
 
