@@ -5,6 +5,7 @@
     
 2.www/nodejs文件夹下创建项目    
 express -e segment    
+//  warning: option `--ejs' has been renamed to `--view=ejs'
 cd segment    
 打开package.json   
 

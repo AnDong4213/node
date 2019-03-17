@@ -2,8 +2,8 @@ class BaseModel {
   constructor(data, message) {
     if (typeof data === 'string') {
       this.message = data
-      data = null  // 等于null就不向下执行了..
-      message = null
+      data = null
+		  message = null
     }
     if (data) {
 			this.data = data
@@ -27,8 +27,6 @@ class ErrorModel extends BaseModel {
     this.errno = -1
   }
 }
-
-// console.log(new SuccessModel('hh'))
 
 module.exports = {
   SuccessModel,

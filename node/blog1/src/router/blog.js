@@ -24,7 +24,12 @@ const handleBlogRouter = (req, res) => {
       author = req.session.username
     }
     const result = getList(author, keyword);
+	// console.log(result)  // Promise { <pending> }
+	/* console.log(result.then(listData => {  Promise { <pending> }
+      console.log(listData[0].title) 
+    })) */
     return result.then(listData => {
+		// console.log(listData[0].content)
       return new SuccessModel(listData)
     })
   }
