@@ -37,7 +37,7 @@ app.use(async (ctx, next) => {
 
 app.keys = ['mypet'];
 app.use(session({
-  maxAge: 20*60*1000
+  maxAge: 5*60*1000
 }, app));
 
 app.use(cors())

@@ -119,6 +119,7 @@ export default {
       }
       httpPost('/user/login', formObj, (data) => {
         if (data !== 0) {
+					// console.log(data)
           this.setIsExpired('login')
           this.$parent.$parent.hideDiaLog();
           this.loginemail = '';

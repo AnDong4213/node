@@ -22,6 +22,7 @@ export default {
   },
   methods: {
     showDiaLog(vnode) {
+			// console.log(vnode)
       this.currentView = vnode
       this.dialogVisible = true
     },
