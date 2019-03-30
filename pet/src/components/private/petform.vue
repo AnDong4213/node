@@ -122,11 +122,43 @@ export default {
         this.pettextarea = item.introduce;
         this.imgsrc = '/api'+item.petimg;
     }
+	
+	/* this.$watch('petsort', (newQuery, oldQuery) => {
+		console.log(newQuery)
+		console.log(oldQuery)
+	}) */
+	this.$watch('petsort', this.throttle((newQuery, oldQuery) => {
+		console.log(newQuery +'--' + oldQuery)
+	}, 1000))
   },
   computed: {
     ...mapGetters(['getInfoItem', 'getPage'])
   },
   methods: {
+	 // 防抖，只执行最后一次
+	debounce(func, wait) {
+		let timer = null;
+		return function(...para) {
+			// console.log(para) // ["vxvzx", "vxvz"]
+			if (timer) {
+				clearTimeout(timer)
+			}
+			timer = setTimeout(() => {
+				func.apply(this, para)
+			}, wait)
+		}
+	},
+	throttle(func, wait) {
+		let timer = null;
+      return function(...para) {
+        if (!timer) {
+          timer = setTimeout(() => {
+            func.apply(this, para);
+            timer = null;
+          }, wait)
+        }
+      }
+	},
     subpetInfo() {
         // console.log(petForm.petimg.files[0] == this.$refs.hideInput.files[0]);  // true
         let formObj = new FormData(petForm);

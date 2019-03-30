@@ -35,7 +35,7 @@ getFileContent('a.json', aData => {
 }); */
 
 
-/* function getFileContent(fileName) {
+function getFileContent(fileName) {
   return new Promise((resolve, reject) => {
     const fullFileName = path.resolve(__dirname, 'files', fileName)
     fs.readFile(fullFileName, (err, data) => {
@@ -49,14 +49,29 @@ getFileContent('a.json', aData => {
     })
   })
 }
-getFileContent('a.json').then(aData => {
+/* getFileContent('a.json').then(aData => {
   console.log(aData)
   return getFileContent(aData.next)
 }).then(bData => {
   console.log(bData)
 }) */
+async function readFileData() {
+  try {
+    let aData = await getFileContent('a.json')
+    console.log('a data', aData)
+    let bData = await getFileContent(aData.next)
+    console.log('b data', bData)
+    let cData = await getFileContent(bData.next)
+    console.log('c data', cData)
+  } catch(err) {
+    console.error(err)
+  }
+}
+readFileData();
 
-const getRepoData  = (fileName) => {
+
+
+/* const getRepoData  = (fileName) => {
   return new Promise((resolve, reject) => {
     const fullFileName = path.resolve(__dirname, 'files', fileName)
     fs.readFile(fullFileName, (err, data) => {
@@ -79,7 +94,7 @@ getFileContent().then(aData => {
   return getRepoData(aData.next)
 }).then(bData => {
   console.log(bData)
-})
+}) */
 
 
 console.log('----------------------------')
