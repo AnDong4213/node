@@ -24,7 +24,7 @@ router.post('/zhuce', async function (ctx, next) {
     let rs = await UserModel.create(user);
     // ctx.body = '插入成功...';
     ctx.body = 1;
-  } catch(err) {
+  } catch (err) {
     let errMsg = err.errors[0].message;
     if (errMsg.indexOf('emailuniq') > -1) {
       // ctx.body = 'email重复';
@@ -44,7 +44,9 @@ router.post('/login', async function (ctx, next) {
     email: ctx.request.body['email'],
     pwd: ctx.request.body['pwd']
   };
-  let rs = await UserModel.findOne({where: user});
+  let rs = await UserModel.findOne({
+    where: user
+  });
   if (rs != null) {
     let loginbean = {
       id: rs.id,
