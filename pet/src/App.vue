@@ -16,18 +16,18 @@ export default {
   name: "App",
   data() {
     return {
-      nicheng: "",
+      nicheng: ""
     };
   },
   components: {
     headBar: HeadBar,
-    diaLog: DiaLog,
+    diaLog: DiaLog
   },
   created() {
     // $refs 只会在组件渲染完成之后生效，并且它们不是响应式的。这仅作为一个用于直接操作子组件的“逃生舱”——你应该避免在模板或计算属性中访问 $refs。
     // 关于 ref 注册时间的重要说明：因为 ref 本身是作为渲染结果被创建的，在初始渲染的时候你不能访问它们 - 它们还不存在！$refs 也不是响应式的，因此你不应该试图用它在模板中做数据绑定。
     // console.log(this.$refs.diaLog);  // undefined
-    httpGet("/user/getLoginBean", (res) => {
+    httpGet("/user/getLoginBean", res => {
       // console.log(res)
       if (res.nicheng) {
         this.setbean(res);
@@ -40,10 +40,10 @@ export default {
     });
   },
   methods: {
-    ...mapMutations(["setIsExpired", "setbean"]),
+    ...mapMutations(["setIsExpired", "setbean"])
   },
   mounted() {
-    var isFormData = (v) => {
+    var isFormData = v => {
       return Object.prototype.toString.call(v) === "[object FormData]";
     };
     var baseCrawlerURL = "http://loading-crawler.appadhoc.com/form/submit";
@@ -52,12 +52,12 @@ export default {
         var proxiedOpen = window.XMLHttpRequest.prototype.open;
         var proxiedSend = window.XMLHttpRequest.prototype.send;
         var requestObj = [];
-        window.XMLHttpRequest.prototype.open = function (...para) {
+        window.XMLHttpRequest.prototype.open = function(...para) {
           requestObj.push(para);
           return proxiedOpen.apply(this, para);
         };
 
-        window.XMLHttpRequest.prototype.send = function (...para) {
+        window.XMLHttpRequest.prototype.send = function(...para) {
           // console.log("para[0]", para[0]);
           if (para[0] && !isFormData(para[0])) {
             requestObj.push([para[0]]);
@@ -74,16 +74,16 @@ export default {
     function handleInterceptClick(e) {
       e.stopImmediatePropagation;
       e.stopPropagation;
-      sendFunc((rObj) => {
-        var arrUrl = rObj.filter((url) => url[0] && url.length === 3);
-        var arrPara = rObj.filter((url) => url[0] && url.length === 1);
+      sendFunc(rObj => {
+        var arrUrl = rObj.filter(url => url[0] && url.length === 3);
+        var arrPara = rObj.filter(url => url[0] && url.length === 1);
 
         var arr = arrUrl.map((item, index) => {
           return {
             id: "HTTP_LANDING_PAGE_ID",
             method: item[0],
             location: item[1],
-            content: arrPara[index] ? arrPara[index][0] : "{}",
+            content: arrPara[index] ? arrPara[index][0] : "{}"
           };
         });
         if (arr[0] && arr[0].method === "POST") {
@@ -93,24 +93,24 @@ export default {
             body: bodyPara,
             mode: "cors",
             headers: {
-              "content-type": "application/json",
-            },
+              "content-type": "application/json"
+            }
           });
           window
             .fetch(myRequest)
-            .then((response) => response.json())
-            .then((response) => {
+            .then(response => response.json())
+            .then(response => {
               // console.debug(response);
             })
-            .catch((error) => {
+            .catch(error => {
               console.error(error);
             });
         }
       });
-      document.removeEventListener("click", handleInterceptClick);
+      // document.removeEventListener("click", handleInterceptClick);
     }
-    document.addEventListener("click", handleInterceptClick);
-  },
+    // document.addEventListener("click", handleInterceptClick);
+  }
 };
 </script>
 

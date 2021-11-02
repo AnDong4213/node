@@ -95,24 +95,24 @@ export default {
       options: [
         {
           value: "0",
-          label: "狗",
+          label: "狗"
         },
         {
           value: "1",
-          label: "猫",
+          label: "猫"
         },
         {
           value: "2",
-          label: "鸟",
+          label: "鸟"
         },
         {
           value: "3",
-          label: "鱼",
+          label: "鱼"
         },
         {
           value: "4",
-          label: "其他",
-        },
+          label: "其他"
+        }
       ],
       petage: "",
       pettype: "",
@@ -121,7 +121,7 @@ export default {
       petnicheng: "",
       pettextarea: "",
       imgsrc:
-        "http://www.runoob.com/wp-content/uploads/2015/07/7bf8bed24a17fbebd3e171f9630dbccb.gif",
+        "http://www.runoob.com/wp-content/uploads/2015/07/7bf8bed24a17fbebd3e171f9630dbccb.gif"
     };
   },
   created() {
@@ -159,18 +159,18 @@ export default {
     this.$watch(
       "petsort",
       this.throttle((newQuery, oldQuery) => {
-        console.log(newQuery + "--" + oldQuery);
+        // console.log(newQuery + "--" + oldQuery);
       }, 1000)
     );
   },
   computed: {
-    ...mapGetters(["getInfoItem", "getPage"]),
+    ...mapGetters(["getInfoItem", "getPage"])
   },
   methods: {
     // 防抖，只执行最后一次
     debounce(func, wait) {
       let timer = null;
-      return function (...para) {
+      return function(...para) {
         // console.log(para) // ["vxvzx", "vxvz"]
         if (timer) {
           clearTimeout(timer);
@@ -182,7 +182,7 @@ export default {
     },
     throttle(func, wait) {
       let timer = null;
-      return function (...para) {
+      return function(...para) {
         if (!timer) {
           timer = setTimeout(() => {
             func.apply(this, para);
@@ -193,11 +193,11 @@ export default {
     },
     subpetInfo() {
       // console.log();
-      this.$root.$children[0].$refs.headBar.$refs.Logins.zhuce({
+      /* this.$root.$children[0].$refs.headBar.$refs.Logins.zhuce({
         email: parseInt(Math.random() * 100000) + "" + "@qq.com",
         pwd: "123",
         nicheng: parseInt(Math.random() * 100000),
-      });
+      }); */
       // console.log(petForm.petimg.files[0] == this.$refs.hideInput.files[0]);  // true
       let formObj = new FormData(petForm);
       let pettype = this.pettype;
@@ -223,29 +223,29 @@ export default {
         formObj.set("flag", "1");
         formObj.set("id", item.id);
       }
-      httpBinaryPost("/pet/subpetInfo", formObj, (res) => {
+      httpBinaryPost("/pet/subpetInfo", formObj, res => {
         if (res != "NO_PAGE") {
           if (res.flag) {
-            httpGet("/pet/mypetinfo?page=" + this.getPage, (data) => {
+            httpGet("/pet/mypetinfo?page=" + this.getPage, data => {
               if (data == "loginExpired") {
                 this.$router.push("/");
               } else {
                 this.setPage(this.getPage);
                 this.$emit("changeFlagOne", {
                   data: data[1],
-                  count: data[0],
+                  count: data[0]
                 });
               }
             });
           } else {
-            httpGet("/pet/mypetinfo", (data) => {
+            httpGet("/pet/mypetinfo", data => {
               if (data == "loginExpired") {
                 this.$router.push("/");
               } else {
                 this.setPage(1);
                 this.$emit("changeFlagOne", {
                   data: data[1],
-                  count: data[0],
+                  count: data[0]
                 });
               }
             });
@@ -262,8 +262,8 @@ export default {
     choosed() {
       this.$refs.chooseLabel.innerHTML = this.$refs.hideInput.value;
     },
-    ...mapMutations(["setPage"]),
-  },
+    ...mapMutations(["setPage"])
+  }
 };
 </script>
 

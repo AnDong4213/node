@@ -15,8 +15,22 @@ module.exports = {
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
-    ]
+    ],
+    script: [
+      {src: 'http://172.23.3.87:8082/ab.plus.js'},
+      {innerHTML: `adhoc('init', {
+        'appKey': 'ADHOC_b5b9bcda-d7ae-4e4b-865c-5d78b9fc5f91'})
+    `}
+    ],
+    __dangerouslyDisableSanitizers: ['script'],
   },
+  /* metaInfo: {
+    script: [{
+      innerHTML: 'console.log("I am in body");',
+      type: 'text/javascript',
+      body: true
+    }]
+  }, */
 
   /*
   ** Customize the progress-bar color

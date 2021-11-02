@@ -61,7 +61,7 @@
             <dd><a
               rel="nofollow"
               href="https://ecom.meituan.com/bizsettle/settle?utm_source=mt_C_my"
-              target="_blank">美食商家入驻(非外卖)</a></dd>
+              target="_blank">美食商家入驻(非外卖)噢噢噢</a></dd>
             <dd><a
               href="https://kd.meituan.com/"
               target="_blank">外卖开店申请</a></dd>

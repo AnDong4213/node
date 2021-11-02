@@ -32,7 +32,8 @@
       </div>
     </el-col>
     <el-col :span="2">&nbsp;</el-col>
-    <Login ref="Logins" />
+    <!-- <Login style="visibility:hidden;"
+           ref="Logins" /> -->
   </el-row>
 </template>
 
@@ -45,15 +46,15 @@ export default {
   props: {
     nicheng: {
       type: String,
-      default: "",
-    },
+      default: ""
+    }
   },
   computed: {
-    ...mapGetters(["getIsExpired", "getbean"]),
+    ...mapGetters(["getIsExpired", "getbean"])
   },
   data() {
     return {
-      input2: "",
+      input2: ""
     };
   },
   methods: {
@@ -61,7 +62,7 @@ export default {
       this.$parent.$refs.diaLog.showDiaLog(Login);
     },
     logout() {
-      httpGet("/user/logout", (res) => {
+      httpGet("/user/logout", res => {
         if (res == "ok") {
           this.$router.push("/");
           this.setIsExpired("nologin");
@@ -75,11 +76,11 @@ export default {
     },
     returnIndex() {
       this.$router.push("/");
-    },
+    }
   },
   components: {
-    Login,
-  },
+    Login
+  }
 };
 </script>
 

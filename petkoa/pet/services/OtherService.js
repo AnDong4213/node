@@ -9,7 +9,7 @@ class OtherService {
     form.uploadDir = './public/images/other';
     form.keepExtensions = true;
     form.multiples = true;
-    form.maxFieldsSize = 200 * 1024 * 1024 ;
+    form.maxFieldsSize = 5 * 1024 * 1024 ;
     // console.log(ctx.get('authorization')); // 获取设置上传的请求头部信息...
   	let fields = await new Promise((resolve, reject) => {
         form.parse(ctx.req, function (err, fields, files) {
@@ -19,15 +19,17 @@ class OtherService {
               return;
           };
       		// console.log(files);
-          // resolve(fields);
-          setTimeout(() => {
-              resolve(fields);
-          }, 2000)
+          resolve(files.file.path);
         })
     });
-    // console.log(fields);
+    if (fields) {
+      fields = fields.replace(/\\/g, '/').replace('public/', 'api/');
+    }
 
-    ctx.body = fields;
+    ctx.body = {
+      location: fields,
+      status: 200
+    };
   }
 
   async ajax(ctx) {

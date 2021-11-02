@@ -7,7 +7,7 @@
               :max="big"
               @blur="brokerBlur"
               size="mini"></el-input>
-    <a href="http://static-dev.appadhoc.com/kuaibao.apk">APK链接</a>
+    <a href="http://d.xmwan.com/yssdaz/10093/10808/yssdaz_35958.apk">APK链接</a>
   </div>
 </template>
 
